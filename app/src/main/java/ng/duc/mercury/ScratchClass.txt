@@ -1,0 +1,111 @@
+package ng.duc.mercury;
+
+/**
+ * Created by ducprogram on 6/18/16.
+ * This class will be used to save any written method or class
+ * that is written but unused and might be beneficial later
+ */
+public class ScratchClass {
+
+	public class Home_Fragment {
+
+        // Used to calculate and keep track total width of recycler. Remember, though stored as
+        // dps, these numbers are converted to px
+        private float recyclerMargin;
+        private float recyclerInnerMargin;
+        // It is a square so width and height are equal
+        private float recyclerItemWidth;
+        private float recyclerWidthLong;
+        private float recyclerWidthShort;
+        private float screenWidth;
+        private TextView mTextBus;
+        private int currentX = 0;
+        // Tracks the last business that is shown in text
+        private int lastItem = 0;
+
+
+		/**
+		 * Update business text view to the name of focused business in recycler view
+		 * @param x     the leftmost horizontal coordinate of recycler view that
+		 *              shows on screen
+		 */
+		private void changeBusText(int x) {
+
+			// Real position is actually ... * (width_long / width_short), but since we have
+			// to account right margin in later calculation, it would make later calculations
+			// more complicated. So we exclude right margin now.
+			float realPosition = (x + recyclerMargin) *
+					((recyclerWidthLong - recyclerMargin) / recyclerWidthShort);
+			int position = (int) Math.ceil( (realPosition - (recyclerMargin + recyclerItemWidth))
+					/ (recyclerInnerMargin + recyclerItemWidth) );
+
+			if ( position == lastItem ) {
+				return;
+			} else {
+				lastItem = position;
+			}
+
+			mTextBus.setText(listBus.get(position).getAsString(
+					AppConstants.SERVER_KEY.BUS_NAME));
+
+		}
+
+        /**
+         * Update recycler width whenever recycler data change
+         */
+        private void updateRecyclerWidth() {
+
+            recyclerWidthLong = ( listBus.size() - 2 ) * ( recyclerInnerMargin + recyclerItemWidth )
+                        + ( recyclerItemWidth + recyclerMargin )
+                        + ( recyclerItemWidth + recyclerInnerMargin + recyclerMargin );
+
+            recyclerWidthShort = recyclerWidthLong - screenWidth + recyclerMargin;
+
+            if (recyclerWidthLong >= screenWidth) {
+                recyclerView.getLayoutParams().width = RecyclerView.LayoutParams.MATCH_PARENT;
+            } else {
+                recyclerView.getLayoutParams().width = RecyclerView.LayoutParams.WRAP_CONTENT;
+            }
+
+        }
+
+        /**
+         * This scrolling listener monitors when recycler view is scrolled and responds
+         * in return to that change
+         */
+        public class ImageScroll extends RecyclerView.OnScrollListener {
+
+            public ImageScroll() {}
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                currentX += dx;
+                changeBusText(currentX);
+            }
+        }
+
+	}
+
+}
+
+/** This is in scene 2 of home fragment
+<TextView
+    android:id="@+id/home_text_bus"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/horizontal_recyclerview_home"
+    android:layout_marginTop="20dp"
+    android:textAlignment="center"
+    android:paddingTop="5dp"
+    android:textSize="20sp"
+    android:textColor="@android:color/white" />
+*/
+
+/** This is a normal item in recycler view
+    <ImageView
+        android:layout_width="@dimen/home_scrollview_height"
+        android:layout_height="@dimen/home_scrollview_height"
+        android:layout_marginLeft="@dimen/home_scrollview_image_margin"
+        android:background="@android:color/holo_blue_bright"/>
+*/

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageview_personal_not_tag"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:maxHeight="340px"
+        app:layout_heightPercent="50%"
+        app:layout_aspectRatio="61.47%"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/meow"/>
+
+    <TextView
+        android:id="@+id/textview_personal_not_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageview_personal_not_tag"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:maxWidth="250dp"
+        android:textColor="@color/black_text"
+        android:textSize="16sp"
+        android:text="@string/personal_not_tag"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textview_personal_not_tag"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:text="@string/personal_refresh"
+        android:onClick="refreshPersonal" />
+
+
+</android.support.percent.PercentRelativeLayout>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/fragment_main"
+        android:tag="example_string_tag"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbarlayout_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorToolbar"
+            app:theme="@style/ToolbarStyle"
+            android:elevation="4dp"
+            app:layout_scrollFlags="scroll|enterAlways"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ng.duc.mercury.custom_views.MainViewPager
+        android:id="@+id/viewpager_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tablayout_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="#30000000"
+        app:tabTextColor="@android:color/darker_gray"
+        app:tabSelectedTextColor="@color/white"
+        app:tabIndicatorColor="@color/white"
+        app:tabIndicatorHeight="1dp" />
+
+</android.support.design.widget.CoordinatorLayout>

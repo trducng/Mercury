@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- TODO: image view should have a transparent overlay -->
+    <!-- TODO: rearrange the content -->
+    <!-- TODO: see if 0dp layout_width and layout_height is necessary -->
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/imageview_search_item_special"
+        app:layout_widthPercent="100%"
+        app:layout_aspectRatio="423.5%"
+        android:scaleType="centerCrop"/>
+
+    <android.support.percent.PercentRelativeLayout
+        android:id="@+id/content_wrapper_search_item_special"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_widthPercent="100%"
+        app:layout_aspectRatio="261.8%">
+
+        <TextView
+            android:id="@+id/textview_bus_name_search_item_special"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textColor="@color/black_text" />
+
+        <TextView
+            android:id="@+id/textview_bus_type_search_item_special"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@color/black_text" />
+
+        <TextView
+            android:id="@+id/textview_bus_address_search_item_special"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@color/black_text" />
+
+        <!-- TODO: Popularity bar accompanied by percentage upvote is here -->
+
+        <LinearLayout
+            android:id="@+id/linearlayout_service_wrapper_search_item_special"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </android.support.percent.PercentRelativeLayout>
+
+</android.support.percent.PercentRelativeLayout>

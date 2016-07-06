@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryLight">#111111</color>
+    <color name="colorToolbar">#222222</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="white">#FFFFFF</color>
+    <color name="white_less">#EEEEEE</color>
+    <color name="black_text">#333333</color>
+    <color name="black_semi_transparent_list_item">#80000000</color>
+    <color name="yellow_button">#FFC000</color>
+</resources>

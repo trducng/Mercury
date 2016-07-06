@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/drawer_user_header"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="192dp"
+              android:background="@color/colorPrimaryLight" >
+
+    <TextView android:id="@+id/drawer_user_header_name"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_alignParentBottom="true"
+              android:text="@string/app_author"
+              android:textColor="@android:color/white"
+              android:textSize="30sp"
+              android:layout_marginStart="20sp"
+              android:layout_marginBottom="15sp" />
+
+</RelativeLayout>

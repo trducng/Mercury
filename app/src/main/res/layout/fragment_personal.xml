@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ng.duc.mercury.custom_views.PersonalRecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_personal_recycler_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:background="@color/colorPrimary"/>

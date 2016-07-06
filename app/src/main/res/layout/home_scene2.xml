@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scene_container_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <EditText
+        android:id="@+id/edittext_home"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:textSize="25sp"
+        android:textColor="@android:color/white"
+        android:hint="Search"
+        android:textColorHint="#ccc"
+        android:background="@drawable/textline"/>
+
+    <ImageView
+        android:id="@+id/imageview_logo_home"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/edittext_home"
+        android:layout_marginBottom="40dp"
+        android:src="@drawable/logo"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/horizontal_recyclerview_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:scrollbars="none"
+        android:layout_below="@id/edittext_home"
+        android:layout_marginTop="40dp" />
+
+    <ImageView
+        android:layout_width="@dimen/home_scrollview_blur"
+        android:layout_height="@dimen/home_scrollview_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@id/horizontal_recyclerview_home"
+        android:background="@drawable/home_image_gradient_left"
+        android:contentDescription="@string/visual_enhancement"/>
+
+    <ImageView
+        android:layout_width="@dimen/home_scrollview_blur"
+        android:layout_height="@dimen/home_scrollview_height"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/horizontal_recyclerview_home"
+        android:background="@drawable/home_image_gradient_right"
+        android:contentDescription="@string/visual_enhancement"/>
+
+
+</RelativeLayout>
