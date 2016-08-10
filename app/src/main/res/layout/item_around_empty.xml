@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- TODO: add onClick to this -->
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@android:color/black">
+
+        <TextView
+            android:id="@+id/textview_around_deal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textAppearance="@style/WhiteText16"
+            android:text="@string/around_deal"/>
+
+
+        <TextView
+            android:id="@+id/textview_around_event"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textAppearance="@style/WhiteText16"
+            android:text="@string/around_event"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageview_fragment_empty"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:maxHeight="340px"
+        app:layout_heightPercent="50%"
+        app:layout_aspectRatio="61.47%"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/meow"/>
+
+    <TextView
+        android:id="@+id/textview_fragment_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageview_fragment_empty"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:maxWidth="250dp"
+        android:textColor="@color/black_text"
+        android:textSize="16sp"
+        android:text="@string/around_empty"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textview_fragment_empty"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:text="@string/refresh"/>
+
+
+</android.support.percent.PercentRelativeLayout>

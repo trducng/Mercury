@@ -12,8 +12,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.util.Iterator;
+
+import ng.duc.mercury.AppConstants;
+
 /**
- * Created by ducprogram on 6/19/16.
+ * Created by ducnguyen on 6/19/16.
  * This class serves as an interface for
  * Android ecosystem to access our database. Basically,
  * if we want to CRUD this database, we contact Android
@@ -30,6 +34,10 @@ public class MercuryDataProvider extends ContentProvider {
 	static final int LIST_SOME_TAGS = 211;
 	static final int LIST_NO_TAGS = 212;
 	static final int SINGLE_TAG = 213;
+
+	static final int LIST_AROUND = 220;
+	static final int LIST_TYPE_AROUND = 221;
+	static final int SINGLE_AROUND = 222;
 
 	// Helper to open and manage database
 	private MercuryDatabaseOpener mDatabaseOpener;
@@ -52,6 +60,8 @@ public class MercuryDataProvider extends ContentProvider {
 		SQLiteDatabase db = mDatabaseOpener.getReadableDatabase();
 
 		switch (mUriMatcher.match(uri)) {
+
+			// Tag/personal entries
 			case LIST_ALL_TAGS:
 				reCursor = db.query(true, DataContract.TAG_BUS,
 						DataContract.tagEntry.PROJECTION,
@@ -70,6 +80,38 @@ public class MercuryDataProvider extends ContentProvider {
 				break;
 			case SINGLE_TAG:
 				throw new UnsupportedOperationException("Cannot query single tag");
+
+			// Around entries
+			case LIST_AROUND:
+				reCursor= db.query(DataContract.AROUND,
+						DataContract.aroundEntry.PROJECTION,
+						null, null, null, null, null);
+				break;
+			case LIST_TYPE_AROUND:
+				int aroundType = DataContract.aroundEntry.getAroundType(uri);
+				switch (aroundType) {
+					case DataContract.aroundEntry.DEAL_TYPE:
+						reCursor = db.query(DataContract.AROUND,
+								DataContract.aroundEntry.PROJECTION,
+								DataContract.aroundEntry.selectType,
+								new String[]{AppConstants.SERVER_RESPONSE.AROUND_DEAL},
+								null, null, null);
+						break;
+					case DataContract.aroundEntry.EVENT_TYPE:
+						reCursor = db.query(DataContract.AROUND,
+								DataContract.aroundEntry.PROJECTION,
+								DataContract.aroundEntry.selectType,
+								new String[]{AppConstants.SERVER_RESPONSE.AROUND_EVENT},
+								null, null, null);
+						break;
+					default:
+						throw new UnsupportedOperationException("Cannot identify " +
+								"code " + aroundType + " to retrieve around data");
+				}
+				break;
+			case SINGLE_AROUND:
+				throw new UnsupportedOperationException("Cannot query single tag");
+
 			default:
 				throw new UnsupportedOperationException("Unknown uri: " + uri);
 		}
@@ -104,6 +146,16 @@ public class MercuryDataProvider extends ContentProvider {
 				break;
 			}
 
+			case SINGLE_AROUND: {
+				long _id = db.insert(DataContract.AROUND, null, values);
+				if (_id > 0) {
+					returnUri = uri;
+				} else {
+					throw new SQLException("Failed to insert to around database: " + uri);
+				}
+				break;
+			}
+
 			default:
 				throw new UnsupportedOperationException("Invalid uri: " + uri);
 		}
@@ -131,8 +183,56 @@ public class MercuryDataProvider extends ContentProvider {
 			case LIST_ALL_TAGS: {
 				db.beginTransaction();
 				try {
-					for (ContentValues value: values) {
+					for (ContentValues value : values) {
 						long _id = db.insert(DataContract.TAG_BUS, null, value);
+						if (_id != -1) {
+							returnCount++;
+						}
+					}
+					db.setTransactionSuccessful();
+				} finally {
+					db.endTransaction();
+				}
+				break;
+			}
+
+			case LIST_AROUND: {
+				db.beginTransaction();
+				try {
+					for (ContentValues value : values) {
+						long _id = db.insert(DataContract.AROUND, null, value);
+						if (_id != -1) {
+							returnCount++;
+						}
+					}
+					db.setTransactionSuccessful();
+				} catch (Exception e) {
+
+					// TODO: <debug only> this whole catch clause is used for debugging and development
+					// Delete this catch clause to save more space
+					ContentValues data = values[returnCount];
+					Iterator<String> keys = data.keySet().iterator();
+					while (keys.hasNext()) {
+						String abc = keys.next();
+						Log.v("Test data", abc + ": " + data.getAsString(abc));
+						keys.remove();
+					}
+				} finally {
+					db.endTransaction();
+				}
+				break;
+			}
+
+			case LIST_TYPE_AROUND: {
+				db.beginTransaction();
+				if (DataContract.aroundEntry.getAroundType(uri) == -1) {
+					throw new UnsupportedOperationException("Bulk insert data: cannot " +
+								"recognize uri" + uri);
+				}
+
+				try {
+					for (ContentValues value : values) {
+						long _id = db.insert(DataContract.AROUND, null, value);
 						if (_id != -1) {
 							returnCount++;
 						}
@@ -203,6 +303,35 @@ public class MercuryDataProvider extends ContentProvider {
 				break;
 			}
 
+			case LIST_AROUND: {
+				if (selection == null) selection = "1";
+				rowsDeleted = db.delete(DataContract.AROUND, selection, selectionArgs);
+				break;
+			}
+
+			case LIST_TYPE_AROUND: {
+				int aroundType = DataContract.aroundEntry.getAroundType(uri);
+				switch (aroundType) {
+					case DataContract.aroundEntry.DEAL_TYPE:
+						rowsDeleted = db.delete(DataContract.AROUND,
+								DataContract.aroundEntry.selectType,
+								new String[] {AppConstants.SERVER_RESPONSE.AROUND_DEAL});
+						break;
+					case DataContract.aroundEntry.EVENT_TYPE:
+						rowsDeleted = db.delete(DataContract.AROUND,
+								DataContract.aroundEntry.selectType,
+								new String[] {AppConstants.SERVER_RESPONSE.AROUND_EVENT});
+						break;
+					default:
+						rowsDeleted = 0;
+						Log.i(LOG_TAG, "Deleting type around. Cannot recognize type" + aroundType);
+						break;
+				}
+				break;
+			}
+
+			// TODO: might need single around deletion case
+
 			default:
 				throw new UnsupportedOperationException("Unknown uri: " + uri);
 		}
@@ -233,6 +362,12 @@ public class MercuryDataProvider extends ContentProvider {
 				return DataContract.tagEntry.CONTENT_TYPE;
 			case SINGLE_TAG:
 				return DataContract.tagEntry.CONTENT_ITEM_TYPE;
+			case LIST_AROUND:
+				return DataContract.aroundEntry.CONTENT_TYPE;
+			case LIST_TYPE_AROUND:
+				return DataContract.aroundEntry.CONTENT_TYPE;
+			case SINGLE_AROUND:
+				return DataContract.aroundEntry.CONTENT_ITEM_TYPE;
 			default:
 				throw new UnsupportedOperationException(
 						"Unknown uri: " + uri.toString());
@@ -250,10 +385,18 @@ public class MercuryDataProvider extends ContentProvider {
 		final String authority = DataContract.PACKAGE_NAME;
 
 		// We match each possible Uri to a corresponding MIME type
+		// Tag/personal data
 		matcher.addURI(authority, DataContract.TAG_BUS, LIST_ALL_TAGS);
 		matcher.addURI(authority, DataContract.TAG_BUS + "/all", LIST_NO_TAGS);
 		matcher.addURI(authority, DataContract.TAG_BUS + "/*", LIST_SOME_TAGS);
 		matcher.addURI(authority, DataContract.TAG_BUS + "/*/*", SINGLE_TAG);
+
+		// Around data
+		matcher.addURI(authority, DataContract.AROUND, LIST_AROUND);
+		matcher.addURI(authority, DataContract.AROUND + "/type/#", LIST_TYPE_AROUND);
+		matcher.addURI(authority, DataContract.AROUND + "/*", SINGLE_AROUND);
+
+
 //		matcher.addURI(authority, DataContract.RECOMMENDATION, RECOMMENDATION);
 //		matcher.addURI(authority, DataContract.LOYALTY, ALL_LOYALTY);
 //		matcher.addURI(authority, DataContract.EVENTS, ALL_EVENTS);
@@ -267,6 +410,8 @@ public class MercuryDataProvider extends ContentProvider {
 
 		return matcher;
 	}
+
+
 
 
 	public int deleteTest(Context context, Uri uri, String string, String[] array) {

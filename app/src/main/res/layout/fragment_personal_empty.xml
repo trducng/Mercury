@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageview_personal_not_tag"
+        android:id="@+id/imageview_fragment_empty"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:maxHeight="340px"
@@ -18,10 +18,10 @@
         android:src="@drawable/meow"/>
 
     <TextView
-        android:id="@+id/textview_personal_not_tag"
+        android:id="@+id/textview_fragment_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageview_personal_not_tag"
+        android:layout_below="@id/imageview_fragment_empty"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:gravity="center"
@@ -33,10 +33,10 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textview_personal_not_tag"
+        android:layout_below="@id/textview_fragment_empty"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
-        android:text="@string/personal_refresh"
+        android:text="@string/refresh"
         android:onClick="refreshPersonal" />
 
 

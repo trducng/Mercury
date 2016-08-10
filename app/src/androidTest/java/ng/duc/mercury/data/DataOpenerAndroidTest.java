@@ -39,6 +39,7 @@ public class DataOpenerAndroidTest extends InstrumentationTestCase {
 
 		final HashSet<String> realTableNames = new HashSet<>();
 		realTableNames.add(DataContract.TAG_BUS);
+		realTableNames.add(DataContract.AROUND);
 
 		try {
 			setUp();

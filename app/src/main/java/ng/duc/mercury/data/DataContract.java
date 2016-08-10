@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -12,7 +13,7 @@ import java.util.HashSet;
 import ng.duc.mercury.AppConstants.SERVER_RESPONSE;
 
 /**
- * Created by ducprogram on 6/19/16.
+ * Created by ducnguyen on 6/19/16.
  * This class defines the contract between the application
  * and backend data resources, so that every component in
  * the application will have a consistent interface to interact
@@ -23,6 +24,8 @@ import ng.duc.mercury.AppConstants.SERVER_RESPONSE;
  */
 public class DataContract {
 
+	public static final String LOG_TAG = DataContract.class.getSimpleName();
+
 	// Define the package name and base Uri, on which other Uris
 	// will be built upon
 	public static final String PACKAGE_NAME = "ng.duc.mercury";
@@ -31,8 +34,9 @@ public class DataContract {
 	// Define table names
 	public static final String TAG_BUS = "tag";
 	public static final String RECOMMENDATION_BUS = "recom";
-	public static final String EVENT = "events";
+	public static final String AROUND = "around";
 	public static final String SEARCH = "search";
+
 
 	public static final class tagEntry implements BaseColumns {
 
@@ -85,11 +89,6 @@ public class DataContract {
 		public static final int LAT_IDX = 10;
 		public static final int LONG_IDX = 11;
 		public static final int TAG_IDX = 12;
-
-
-
-		public static final String selectTags =
-				"WHERE " + COL_TAG + " = ?";
 
 		public static final String selectTagAndId =
 				COL_TAG + " = ? AND " + COL_BUSID + " = ?";
@@ -171,7 +170,7 @@ public class DataContract {
 		 * content://com.ducnguyen.duo/tag/<allTags>
 		 * will return reformatted <allTags>>
 		 * @param uri   the Uri that contain the tag names
-		 * @return
+		 * @return      the list of tag names that included in uri
 		 */
 		public static String[] getTagNames(Uri uri) {
 
@@ -232,6 +231,140 @@ public class DataContract {
 		}
 	}
 
+	/**
+	 * Around table will handle two types of entries: normal entries and header entries.
+	 * Header entries are basically a condensed version of normal entries
+	 */
+	public static final class aroundEntry implements BaseColumns {
+
+		// Unique Uri for this table
+		public static final Uri CONTENT_URI =
+				BASE_URI.buildUpon().appendPath(AROUND).build();
+
+		// Unique MIME type for data from this table
+		public static final String CONTENT_TYPE =
+				ContentResolver.CURSOR_DIR_BASE_TYPE + "/"
+						+ PACKAGE_NAME + "/" + AROUND;
+		public static final String CONTENT_ITEM_TYPE =
+				ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"
+						+ PACKAGE_NAME + "/" + AROUND;
+
+		// Constants for each columns
+		public static final String COL_TYPE = SERVER_RESPONSE.TYPE;
+		public static final String COL_BUSID = SERVER_RESPONSE.BUS_ID;
+		public static final String COL_EVENTID = SERVER_RESPONSE.EVENT_ID;
+		public static final String COL_CIMG = SERVER_RESPONSE.BUS_COVER_IMG;
+		public static final String COL_PAGE = SERVER_RESPONSE.EXTRA;
+
+		public static final String COL_HEADER = "header";
+		public static final String COL_EVENT = SERVER_RESPONSE.EVENT_INFO;
+		public static final String COL_LOCATION = SERVER_RESPONSE.BUS_LOC;
+		public static final String COL_NAME = SERVER_RESPONSE.BUS_NAME;
+		public static final String COL_DISTANCE = SERVER_RESPONSE.BUS_DISTANCE;
+
+		public static final String[] PROJECTION = new String[] {
+				_ID, COL_TYPE, COL_EVENT, COL_EVENTID, COL_CIMG, COL_NAME,
+				COL_BUSID, COL_LOCATION, COL_DISTANCE, COL_PAGE, COL_HEADER
+		};
+
+		public static final int ID_IDX = 0;
+		public static final int TYPE_IDX = 1;
+		public static final int EVENT_IDX = 2;
+		public static final int EVENTID_IDX = 3;
+		public static final int CIMG_IDX = 4;
+		public static final int NAME_IDX = 5;
+		public static final int BUSID_IDX = 6;
+		public static final int LOC_IDX = 7;
+		public static final int DISTANCE_IDX = 8;
+		public static final int PAGE_IDX = 9;
+		public static final int HEADER_IDX = 10;
+
+		public static final int DEAL_TYPE = 0;
+		public static final int EVENT_TYPE = 1;
+
+		public static final String selectType = COL_TYPE + " = ?";
+
+		public static final String selectPage = COL_PAGE + " = ?";
+
+		public static final String selectTypePage = COL_TYPE + " = ? AND " + COL_PAGE + " = ?";
+
+		/**
+		 * Create Uri that will be used by content provider to retrieve a complete
+		 * list of around entries (regardless of whether businesses are deals or events)
+		 * Ex content://ng.duc.mercury/around
+		 * @return  uri that can be used to access complete list of around entries
+		 */
+		public static Uri buildGeneralAroundUri() {
+			return CONTENT_URI;
+		}
+
+
+		/**
+		 * Create uri that will be used by content provider to retrieve all entries
+		 * that are about deals. It is: content://ng.duc.mercury/around/type/0
+		 * @return uri that will be used to access all deal entries
+		 */
+		public static Uri buildDealUri() {
+			return CONTENT_URI.buildUpon().appendPath("type")
+					.appendPath(String.valueOf(DEAL_TYPE))
+					.build();
+		}
+
+		/**
+		 * Create uri that will be used by content provider to retrieve all entries
+		 * that are about event. It is: content://ng.duc.mercury/around/type/1
+		 * @return uri that will be used to access all event entries
+		 */
+		public static Uri buildEventUri() {
+			return CONTENT_URI.buildUpon().appendPath("type")
+					.appendPath(String.valueOf(EVENT_TYPE))
+					.build();
+		}
+
+		/**
+		 * Create uri that will be used by content provider to retrieve a specific
+		 * entry. It is: content://ng.duc.mercury/around/<eventId>
+		 * @return uri that will be used to access all deal entries
+		 */
+		public static Uri buildSpecificUri(String eventId) {
+			return CONTENT_URI.buildUpon().appendPath(eventId).build();
+		}
+
+		/**
+		 * Get the around type out of an uri. Ex:
+		 * content://ng.duc.mercury/type/0 => 0 (deal uri)
+		 * content://ng.duc.mercury/type/1 => 1 (event uri)
+		 * @param uri   the uri that will be analyzed
+		 * @return      the int code of type, 0 means deal and 1 means event, -1 otherwise
+		 */
+		public static int getAroundType(Uri uri) {
+
+			String[] segments = uri.getEncodedPath().split("/");
+			String code = segments[segments.length - 1];
+
+			switch (code) {
+				case "0":
+					return 0;
+				case "1":
+					return 1;
+				default:
+					Log.i(LOG_TAG, "Incorrect type code when retrieving around data: " + code);
+					return -1;
+			}
+		}
+
+
+		/**
+		 * Create quick arguments
+		 * @param type  type of data (event or deal)
+		 * @param page  the current page to load (around uses infinite scroll)
+		 * @return      the accurately constructed arguments.
+		 */
+		public static String[] constructTypePageArg(String type, int page) {
+			return new String[] {type, String.valueOf(page)};
+		}
+	}
+
 	public static final class recBusEntry implements BaseColumns {
 
 		public static final Uri CONTENT_URI =
@@ -289,4 +422,7 @@ public class DataContract {
 		}
 
 	}
+
+
+
 }

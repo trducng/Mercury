@@ -5,9 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import ng.duc.mercury.data.DataContract.tagEntry;
+import ng.duc.mercury.data.DataContract.aroundEntry;
 
 /**
- * Created by ducprogram on 6/19/16.
+ * Created by ducnguyen on 6/19/16.
  * This class helps organize database when database first
  * opens, specifically:
  * 1. Create new database when none exists
@@ -29,6 +30,8 @@ public class MercuryDatabaseOpener extends SQLiteOpenHelper {
 
 		// TODO: <debug> delete this
 		db.execSQL("DROP TABLE IF EXISTS " + DataContract.TAG_BUS);
+		db.execSQL("DROP TABLE IF EXISTS " + DataContract.AROUND);
+
 		// ===============
 
 		// Create each table with the appropriate columns
@@ -50,7 +53,22 @@ public class MercuryDatabaseOpener extends SQLiteOpenHelper {
 				+ tagEntry.COL_LAT + " REAL NOT NULL, "
 				+ tagEntry.COL_LONG + " REAL NOT NULL);";
 
+		final String SQL_CREATE_AROUND_TABLE = "CREATE TABLE "
+				+ DataContract.AROUND + " ("
+				+ aroundEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+				+ aroundEntry.COL_TYPE + " TEXT NOT NULL, "
+				+ aroundEntry.COL_HEADER + " INT NOT NULL, "
+				+ aroundEntry.COL_EVENT + " TEXT, "
+				+ aroundEntry.COL_EVENTID + " TEXT NOT NULL, "
+				+ aroundEntry.COL_CIMG + " TEXT NOT NULL, "
+				+ aroundEntry.COL_NAME + " TEXT, "
+				+ aroundEntry.COL_BUSID + " TEXT NOT NULL, "
+				+ aroundEntry.COL_LOCATION + " TEXT, "
+				+ aroundEntry.COL_PAGE + " INT, "
+				+ aroundEntry.COL_DISTANCE + " REAL); ";
+
 		db.execSQL(SQL_CREATE_TAG_TABLE);
+		db.execSQL(SQL_CREATE_AROUND_TABLE);
 	}
 
 	@Override

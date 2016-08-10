@@ -16,11 +16,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import ng.duc.mercury.AppConstants;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Created by ducprogram on 6/21/16.
+ * Created by ducnguyen on 6/21/16.
  * This method tests the robustness of data provider.
  */
 @RunWith(AndroidJUnit4.class)
@@ -92,7 +94,7 @@ public class DataProviderAndroidTest extends ProviderTestCase2 {
 	}
 
 	@Test
-	public void testCRUDOperation() {
+	public void testTagCRUDOperation() {
 
 		// Catch away, the default getContext() in content provider will return null
 		// hence cannot create an appropriate database opener. That's why we have to
@@ -139,6 +141,75 @@ public class DataProviderAndroidTest extends ProviderTestCase2 {
 		c = new MercuryDataProvider().queryTest(mContext,
 				DataContract.tagEntry.buildGeneralTag(), null, null, null, null);
 		assertThat("number of dataset is not empty after complete delete",
+				c.getCount(), is(0));
+	}
+
+	@Test
+	public void testAroundCRUDOperation() {
+
+
+		mContext = InstrumentationRegistry.getTargetContext();
+		MercuryDatabaseOpener opener = new MercuryDatabaseOpener(mContext);
+		opener.onCreate(opener.getWritableDatabase());
+
+		new MercuryDataProvider().deleteTest(
+				mContext, DataContract.tagEntry.buildGeneralTag(), null, null);
+
+
+		HashMap<String, String> aroundCols = new HashMap<>();
+		aroundCols.put(DataContract.aroundEntry.COL_EVENT, "string");
+		aroundCols.put(DataContract.aroundEntry.COL_EVENTID, "string");
+		aroundCols.put(DataContract.aroundEntry.COL_LOCATION, "string");
+		aroundCols.put(DataContract.aroundEntry.COL_CIMG, "string");
+		aroundCols.put(DataContract.aroundEntry.COL_NAME, "string");
+		aroundCols.put(DataContract.aroundEntry.COL_BUSID, "string");
+		aroundCols.put(DataContract.aroundEntry.COL_DISTANCE, "real");
+
+		int numData = 20;
+		ArrayList<ContentValues> fakeData = createFakeData(numData, aroundCols);
+		for (int i=0; i<numData; i++) {
+			ContentValues data = fakeData.get(i);
+			if (i < 5) {
+				data.put(DataContract.aroundEntry.COL_TYPE,
+						 AppConstants.SERVER_RESPONSE.AROUND_DEAL);
+				data.put(DataContract.aroundEntry.COL_HEADER, 1);
+			} else if (i < 10) {
+				data.put(DataContract.aroundEntry.COL_TYPE,
+						AppConstants.SERVER_RESPONSE.AROUND_EVENT);
+				data.put(DataContract.aroundEntry.COL_HEADER, 1);
+			} else if (i < 15) {
+				data.put(DataContract.aroundEntry.COL_TYPE,
+						AppConstants.SERVER_RESPONSE.AROUND_DEAL);
+				data.put(DataContract.aroundEntry.COL_HEADER, 0);
+			} else {
+				data.put(DataContract.aroundEntry.COL_TYPE,
+						AppConstants.SERVER_RESPONSE.AROUND_EVENT);
+				data.put(DataContract.aroundEntry.COL_HEADER, 0);
+			}
+		}
+
+		ContentValues[] fakeDataArray = new ContentValues[fakeData.size()];
+		fakeData.toArray(fakeDataArray);
+
+
+		int inserted = new MercuryDataProvider()
+				.bulkInsertTest(mContext, DataContract.aroundEntry.buildGeneralAroundUri(),
+								fakeDataArray);
+		Log.v(LOG_TAG, "Insertion completes: " + inserted);
+		assertThat("Number of data inserted is different from the number of data created",
+					inserted, is(fakeDataArray.length));
+
+		Cursor c = new MercuryDataProvider().queryTest(mContext,
+				DataContract.aroundEntry.buildGeneralAroundUri(),
+				null, null, null, null);
+		assertThat("Number of database is different from the number" +
+				"of data inserted", c.getCount(), is(numData));
+
+		new MercuryDataProvider().deleteTest(mContext,
+				DataContract.aroundEntry.buildGeneralAroundUri(), null, null);
+		c = new MercuryDataProvider().queryTest(mContext,
+				DataContract.aroundEntry.buildGeneralAroundUri(), null, null, null, null);
+		assertThat("Dataset is not empty after complete deletion",
 				c.getCount(), is(0));
 	}
 }

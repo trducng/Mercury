@@ -68,6 +68,31 @@ public class DataContractAndroidTest {
 				is(new String[] {"hello Mai", "B123"}));
 	}
 
+	@Test
+	public void testAroundEntryMethods() {
 
+		assertThat(DataContract.aroundEntry.buildGeneralAroundUri().toString(),
+					is("content://ng.duc.mercury/around"));
+
+		assertThat(DataContract.aroundEntry.buildDealUri().toString(),
+					is("content://ng.duc.mercury/around/type/0"));
+
+		assertThat(DataContract.aroundEntry.buildEventUri().toString(),
+					is("content://ng.duc.mercury/around/type/1"));
+
+		assertThat(DataContract.aroundEntry.buildSpecificUri("somebusid123").toString(),
+					is("content://ng.duc.mercury/around/somebusid123"));
+
+		Uri testDeal = Uri.parse("content://ng.duc.mercury/around/type/0");
+		Uri testEvent = Uri.parse("content://ng.duc.mercury/around/type/1");
+		Uri testOther = Uri.parse("content://ng.duc.mercury/around/type/123");
+		assertThat(DataContract.aroundEntry.getAroundType(testDeal),
+					is(0));
+		assertThat(DataContract.aroundEntry.getAroundType(testEvent),
+					is(1));
+		assertThat(DataContract.aroundEntry.getAroundType(testOther),
+					is(-1));
+
+	}
 
 }

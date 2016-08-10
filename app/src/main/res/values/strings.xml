@@ -5,6 +5,9 @@
 
     <string name="visual_enhancement">Visual enhancement</string>
 
+    <!-- Toolbar -->
+    <string name="toolbar_menu_navigation_icon">Menu icon</string>
+
     <!-- Drawer -->
     <string name="drawer_user_account">Your Account</string>
     <string name="drawer_settings">Settings</string>
@@ -20,6 +23,9 @@
 
     <!-- Main activity -->
     <string name="personal_not_tag">All your tagged businesses will be shown here. Start by tagging your favorite restaurants or coffee shops.,, If it is still empty, please refresh this page</string>
-    <string name="personal_refresh">REFRESH</string>
+    <string name="refresh">REFRESH</string>
+    <string name="around_deal">Promotion</string>
+    <string name="around_event">Events</string>
+    <string name="around_empty">Oops&#8230; Seems like there isn\'t anything around&#8230;</string>
 
 </resources>

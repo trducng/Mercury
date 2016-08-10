@@ -38,9 +38,6 @@ public class PersonalTag extends View {
 		totalWidth = total_width;
 		defaultWidth = total_width / 3;
 
-		background.mutate();
-		background.setColor(Color.parseColor(color));
-
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			background = (GradientDrawable) getResources()
 					.getDrawable(R.drawable.personal_tag, null);
@@ -48,6 +45,10 @@ public class PersonalTag extends View {
 			background = (GradientDrawable) getResources()
 					.getDrawable(R.drawable.personal_tag);
 		}
+
+		background.mutate();
+		background.setColor(Color.parseColor(color));
+
 
 		setAttributes();
 	}

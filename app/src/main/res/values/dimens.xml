@@ -11,4 +11,8 @@
 
     <!-- Personal screen -->
     <dimen name="personal_button_margin">10dp</dimen>
+
+    <!-- List special item -->
+    <dimen name="special_left_view_left_margin">10dp</dimen>
+    <dimen name="special_right_view_right_margin">20dp</dimen>
 </resources>

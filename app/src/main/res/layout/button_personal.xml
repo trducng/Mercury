@@ -7,4 +7,5 @@
     android:background="@android:color/transparent"
     android:textColor="@color/yellow_button"
     android:textSize="16sp"
+    android:fontFamily="monospace"
     android:minWidth="0dp" />

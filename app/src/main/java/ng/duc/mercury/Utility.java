@@ -3,7 +3,10 @@ package ng.duc.mercury;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.Nullable;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -20,16 +23,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import ng.duc.mercury.AppConstants.URL_CONSTANTS;
 
 /**
- * Created by ducprogram on 6/15/16.
+ * Created by ducnguyen on 6/15/16.
  * This class contains some utility methods that will be used to handle miscellaneous
  * functions throughout the app.
  */
@@ -188,6 +194,93 @@ public class Utility {
 		return dps * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
 	}
 
+
+	/**
+	 * This method is called in application class. Upon executed, it will change the default
+	 * font asset and replace it with a custom font. As a result, rather than adding a customized
+	 * font, we replace the source of an established font to the customized font. As a result,
+	 * when we call the established font, the customized source will be used rather than the
+	 * established source
+ 	 * @param context   the context of application
+	 * @param typeFont  the type-fontDir map (the type key corresponds to sSystemFont keys. As of
+	 *                  API23, the following are supported:
+	 *                      - monospace
+	 *                      - sans-serif
+	 *                      - serif
+	 */
+	public static void setDefaultFont(Context context, Map<String, String> typeFont) {
+
+		Iterator iterator = typeFont.entrySet().iterator();
+
+		if (Build.VERSION.SDK_INT >= 21) {
+
+			Map<String, Typeface> newMap = new HashMap<>();
+
+			while (iterator.hasNext()) {
+				Map.Entry pair = (Map.Entry) iterator.next();
+				newMap.put((String) pair.getKey(),
+							Typeface.createFromAsset(context.getAssets(),
+													 (String) pair.getValue()));
+				iterator.remove();
+			}
+
+			try {
+				final Field staticField = Typeface.class.getDeclaredField("sSystemFontMap");
+				staticField.setAccessible(true);
+				staticField.set(null, newMap);
+			} catch (NoSuchFieldException e) {
+				Log.e(LOG_TAG, "Cannot retrieve sSystemFontMap");
+			} catch (IllegalAccessException e) {
+				Log.e(LOG_TAG, "Cannot put font map to sSystemFontMap");
+			}
+
+		} else {
+
+			String typeface;
+
+			while (iterator.hasNext()) {
+
+				Map.Entry pair = (Map.Entry) iterator.next();
+				Typeface newTypeface = Typeface.createFromAsset(context.getAssets(),
+													   (String) pair.getValue());
+
+				switch ((String) pair.getKey()) {
+
+					case "monospace":
+						typeface = "MONOSPACE";
+						break;
+					case "sans-serif":
+						typeface = "SANS_SERIF";
+						break;
+					case "serif":
+						typeface = "SERIF";
+						break;
+					default:
+						typeface = "DEFAULT";
+						Log.e(LOG_TAG, "Cannot recognize font " + pair.getKey() + ". Use DEFAULT");
+
+				}
+
+				try {
+					final Field staticField = Typeface.class.getDeclaredField(typeface);
+					staticField.setAccessible(true);
+					staticField.set(null, newTypeface);
+				} catch (NoSuchFieldException e) {
+					Log.e(LOG_TAG, "Cannot retrieve " + pair.getKey()  + ": " + e.getMessage());
+				} catch (IllegalAccessException e) {
+					Log.e(LOG_TAG, "Cannot manually set customized font to " + pair.getKey()
+							+ ": " + e.getMessage());
+				}
+
+				iterator.remove();
+			}
+
+		}
+
+	}
+
+
+
 	// INTERACT WITH THE INTERNET ####################################################
 
 	/**
@@ -226,9 +319,8 @@ public class Utility {
 			}
 
 			if (buffer.length() == 0) {return "";}
-			String result =  buffer.toString();
+			return buffer.toString();
 
-			return result;
 
 		} catch (MalformedURLException e) {
 			Log.e(LOG_TAG, "Malformed URL: " + uri.toString());
@@ -267,7 +359,7 @@ public class Utility {
 	 *                      row that can be stored in the database
  	 */
 	public static ArrayList<ContentValues> getDataFromJSON(String rawString,
-	                                                       String[] extraKeys)
+	                                                       @Nullable String[] extraKeys)
 			throws JSONException {
 
 		try {
@@ -288,7 +380,7 @@ public class Utility {
 				ContentValues eachResult = new ContentValues();
 
 				// Get the value from extraKeys (outside of "item")
-				if (extraKeys != null) {
+				if ((extraKeys != null) && (extraKeys.length > 0)) {
 					for (String extraKey: extraKeys) {
 						eachResult.put(extraKey, originalFile.getString(extraKey));
 					}
@@ -327,7 +419,7 @@ public class Utility {
 	 *                      row that can be stored in the database
 	 */
 	public static ArrayList<ContentValues> getDataFromJSON(JSONObject jsonObject,
-	                                                       String[] extraKeys)
+	                                                       @Nullable String[] extraKeys)
 			throws JSONException {
 
 		try {
@@ -347,7 +439,7 @@ public class Utility {
 				ContentValues eachResult = new ContentValues();
 
 				// Get the value from extraKeys (outside of "item")
-				if (extraKeys != null) {
+				if ((extraKeys != null) && (extraKeys.length > 0)) {
 					for (String extraKey: extraKeys) {
 						eachResult.put(extraKey, jsonObject.getString(extraKey));
 					}
@@ -373,6 +465,9 @@ public class Utility {
 	}
 
 
+	/**
+	 * This class handles building the URL that will send to server.
+	 */
 	public static class BuildURL {
 
 
@@ -394,7 +489,93 @@ public class Utility {
 					.appendQueryParameter(URL_CONSTANTS.USER_ID, userId)
 					.appendQueryParameter(URL_CONSTANTS.EXTRA, String.valueOf(extra))
 					.build();
+		}
 
+		/**
+		 * Create url to update the surrounding events and deals. URL has the form:
+		 * https://mercury.com/around?userID=<userID>&type=<type>&lat=<lat>&long=<long>
+		 *     &refresh=<refresh>
+		 * @param userId    the id of user that will query server
+		 * @param type      the type of around update (deal or event)
+		 * @param lat       the current latitude of user
+		 * @param lon       the current longitude of user
+		 * @param refresh   whether user wants to refresh data, 1=refresh, 0=no_refresh
+		 * @param page      the page used to mark where the data is in infinite scroll
+		 * @return          the correct URL to query to server
+		 */
+		public static Uri aroundSync(@Nullable String userId, String type,
+		                             double lat, double lon, int refresh, int page) {
+
+			if ((refresh != 0) && (refresh != 1)) {
+				throw new IllegalArgumentException("refresh argument can only be either 1 or 0, " +
+						"currently " + refresh);
+			}
+			Uri result;
+
+			if (userId == null) {
+				result = Uri.parse(URL_CONSTANTS.SERVER_NAME)
+						.buildUpon()
+						.appendPath(URL_CONSTANTS.AROUND)
+						.appendQueryParameter(URL_CONSTANTS.TYPE, type)
+						.appendQueryParameter(URL_CONSTANTS.LAT, String.valueOf(lat))
+						.appendQueryParameter(URL_CONSTANTS.LON, String.valueOf(lon))
+						.appendQueryParameter(URL_CONSTANTS.REFRESH, String.valueOf(refresh))
+						.appendQueryParameter(URL_CONSTANTS.EXTRA, String.valueOf(page))
+						.build();
+			} else {
+				result = Uri.parse(URL_CONSTANTS.SERVER_NAME)
+						.buildUpon()
+						.appendPath(URL_CONSTANTS.AROUND)
+						.appendQueryParameter(URL_CONSTANTS.USER_ID, userId)
+						.appendQueryParameter(URL_CONSTANTS.TYPE, type)
+						.appendQueryParameter(URL_CONSTANTS.LAT, String.valueOf(lat))
+						.appendQueryParameter(URL_CONSTANTS.LON, String.valueOf(lon))
+						.appendQueryParameter(URL_CONSTANTS.REFRESH, String.valueOf(refresh))
+						.appendQueryParameter(URL_CONSTANTS.EXTRA, String.valueOf(page))
+						.build();
+			}
+
+			return result;
+		}
+
+		/**
+		 * Create url to update the surrounding events and deals. URL has the form:
+		 * https://mercury.com/around?userID=<userID>&type=<type>&refresh=<refresh>&extra=<page>
+		 * @param userId    the id of user that will query server
+		 * @param type      the type of around update (deal or event)
+		 * @param refresh   whether user wants to refresh data, 1=refresh, 0=no_refresh
+		 * @param page      the page used in infinite scroll
+		 * @return          the correct URL to query to server
+		 */
+		public static Uri aroundSync(@Nullable String userId, String type,
+		                             int refresh, int page) {
+
+			if (!((refresh == 0) || (refresh == 1))) {
+				throw new IllegalArgumentException("refresh argument can only be either 1 or 0, " +
+						"currently " + refresh);
+			}
+			Uri result;
+
+			if (userId == null) {
+				result = Uri.parse(URL_CONSTANTS.SERVER_NAME)
+						.buildUpon()
+						.appendPath(URL_CONSTANTS.AROUND)
+						.appendQueryParameter(URL_CONSTANTS.TYPE, type)
+						.appendQueryParameter(URL_CONSTANTS.REFRESH, String.valueOf(refresh))
+						.appendQueryParameter(URL_CONSTANTS.EXTRA, String.valueOf(page))
+						.build();
+			} else {
+				result = Uri.parse(URL_CONSTANTS.SERVER_NAME)
+						.buildUpon()
+						.appendPath(URL_CONSTANTS.AROUND)
+						.appendQueryParameter(URL_CONSTANTS.USER_ID, userId)
+						.appendQueryParameter(URL_CONSTANTS.TYPE, type)
+						.appendQueryParameter(URL_CONSTANTS.REFRESH, String.valueOf(refresh))
+						.appendQueryParameter(URL_CONSTANTS.EXTRA, String.valueOf(page))
+						.build();
+			}
+
+			return result;
 		}
 
 	}

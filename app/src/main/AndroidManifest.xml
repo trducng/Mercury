@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
           package="ng.duc.mercury">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -10,6 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
+        android:name=".Application"
         android:allowBackup="true"
         android:debuggable="true"
         android:icon="@mipmap/m"
@@ -25,6 +25,10 @@
             android:name=".main.PersonalFragment$PersonalSyncService"
             android:exported="false" />
 
+        <service
+            android:name=".main.AroundFragment$AroundSyncService"
+            android:exported="false" />
+
         <provider
             android:authorities="@string/package_name"
             android:name=".data.MercuryDataProvider"
@@ -34,10 +38,26 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".SearchActivity" />
+
         </activity>
+
+        <activity
+            android:name=".SearchActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
+        </activity>
+
     </application>
 
 </manifest>

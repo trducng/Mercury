@@ -152,7 +152,7 @@ public class PersonalFragment extends Fragment implements
 		if (stringSet == null) {
 			// if stringSet is null then probably the user has logged in
 			// but hasn't tagged any business
-			return inflater.inflate(R.layout.fragment_personal_not_tag, container, false);
+			return inflater.inflate(R.layout.fragment_personal_empty, container, false);
 		}
 
 		rootView = (PersonalRecyclerView) inflater.inflate(R.layout.fragment_personal,
@@ -190,8 +190,6 @@ public class PersonalFragment extends Fragment implements
 			return rootView;
 		}
 
-
-
 		// Register intent filter and receiver in order to fire cursor loader whenever the
 		// system make sure that the database is up-to-date (this is to avoid null pointer
 		// problem - database and shared preferences are still being processed in the
@@ -210,7 +208,7 @@ public class PersonalFragment extends Fragment implements
 		// bookmark, order, reserve, message, loyalty
 		Intent intent = new Intent(getActivity(), PersonalSyncService.class);
 		intent.putExtra(
-				MAIN_ACTIVITY.URL_PERSONAL,
+				MAIN_ACTIVITY.URL_UPDATE,
 				Utility.BuildURL.tagSync(
 						prefs.getString(PREFERENCES.USER_ID, null),
 						prefs.getInt(PREFERENCES.PERSONAL_SYNC, -1)));
@@ -289,7 +287,7 @@ public class PersonalFragment extends Fragment implements
 		private Cursor mData;
 		private PersonalButtonGroup mGroup;
 		private double mLat = -1000;
-		private double mLong = -1000;
+		private double mLon = -1000;
 
 		Typeface avenirBook;
 		Typeface avenirHeavy;
@@ -436,7 +434,7 @@ public class PersonalFragment extends Fragment implements
 				Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(
 						((MainActivity) getActivity()).mGoogleApiClient);
 				mLat = lastLocation.getLatitude();
-				mLong = lastLocation.getLongitude();
+				mLon = lastLocation.getLongitude();
 			}
 
 			avenirBook = Typeface.createFromAsset(getActivity().getAssets(),
@@ -544,9 +542,9 @@ public class PersonalFragment extends Fragment implements
 										itemWidth/3));
 					}
 
-					if ((mLat != -1000) && (mLong != -1000)) {
+					if ((mLat != -1000) && (mLon != -1000)) {
 						castedHolder.getDistance().setText(Utility.formatKM(Utility.getDistance(
-								mLat, mLong,
+								mLat, mLon,
 								mData.getDouble(tagEntry.LAT_IDX),
 								mData.getDouble(tagEntry.LONG_IDX)
 						)));
@@ -708,7 +706,7 @@ public class PersonalFragment extends Fragment implements
 			JSONObject fromServer;
 			ArrayList<ContentValues> data;
 
-//			Uri uri = intent.getParcelableExtra(AppConstants.MAIN_ACTIVITY.URL_PERSONAL);
+//			Uri uri = intent.getParcelableExtra(AppConstants.MAIN_ACTIVITY.URL_UPDATE);
 			// TODO: delete this fake data
 			Uri uri = Uri.parse("https://www.dropbox.com/s/c989wf3izrtqpkc/personal0.json?dl=1");
 
@@ -817,6 +815,7 @@ public class PersonalFragment extends Fragment implements
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
+			// TODO: what happen if root view is not returned?
 			getLoaderManager().initLoader(LOADER_PERSONAL, null, PersonalFragment.this);
 
 			HashSet<String> stringSet = (HashSet<String>)
@@ -828,4 +827,5 @@ public class PersonalFragment extends Fragment implements
 
 		}
 	}
+
 }

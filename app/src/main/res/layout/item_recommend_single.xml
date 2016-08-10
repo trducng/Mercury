@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp">
+
+    <!-- TODO: all the absolute sizes (in layout_width/height, margin, text size... will need to be declared in separate files to account for different screen sizes -->
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/imageview_personal_item_special"
+        app:layout_widthPercent="100%"
+        app:layout_aspectRatio="161.8%"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_widthPercent="100%"
+        app:layout_aspectRatio="161.8%"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:background="@color/black_semi_transparent_list_item" />
+
+    <TextView
+        android:id="@+id/textview_bus_distance_personal_item_special"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/textview_bus_cost_personal_item_special"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/textview_bus_distance_personal_item_special"
+        android:layout_below="@id/textview_bus_distance_personal_item_special"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/textview_bus_name_personal_item_special"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/white"
+        android:textSize="34sp"
+        android:fontFamily="serif"/>
+
+    <TextView
+        android:id="@+id/textview_bus_category_personal_item_special"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/textview_bus_name_personal_item_special"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textview_bus_address_personal_item_special"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/textview_bus_category_personal_item_special"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="5dp"
+        android:id="@+id/view_positive_bar_personal_item_special"
+        android:layout_below="@id/textview_bus_address_personal_item_special"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:background="#008C00"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="5dp"
+        android:id="@+id/view_negative_bar_personal_item_special"
+        android:layout_below="@id/textview_bus_address_personal_item_special"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:background="#D90000"/>
+
+    <TextView
+        android:id="@+id/textview_bus_pop_percent_personal_item_special"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view_negative_bar_personal_item_special"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="25dp"
+        android:textColor="@color/white"
+        android:textSize="12sp"/>
+
+    <LinearLayout
+        android:id="@+id/linearlayout_service_wrapper_personal_item_special"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="10dp"/>
+
+</android.support.percent.PercentRelativeLayout>

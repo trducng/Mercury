@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/imageview_around_background"
+        app:layout_widthPercent="100%"
+        app:layout_aspectRatio="161.8%"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_widthPercent="100%"
+        app:layout_aspectRatio="161.8%"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/black_semi_transparent_list_item" />
+
+    <TextView
+        android:id="@+id/textview_around_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/special_left_view_left_margin"
+        android:layout_marginTop="10dp"
+        android:textAppearance="@style/WhiteText12"/>
+
+    <TextView
+        android:id="@+id/textview_around_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:textAlignment="viewEnd"
+        android:layout_marginEnd="@dimen/special_right_view_right_margin"
+        android:textAppearance="@style/WhiteText34" />
+
+    <TextView
+        android:id="@+id/textview_around_business"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/textview_around_info"
+        android:layout_marginEnd="@dimen/special_right_view_right_margin"
+        android:textAppearance="@style/WhiteText12" />
+
+    <TextView
+        android:id="@+id/textview_around_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/textview_around_business"
+        android:layout_marginEnd="@dimen/special_right_view_right_margin"
+        android:textAppearance="@style/WhiteText16"/>
+
+
+</android.support.percent.PercentRelativeLayout>

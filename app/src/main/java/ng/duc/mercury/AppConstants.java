@@ -25,12 +25,15 @@ public class AppConstants {
 		public static final String INTENT_HOME_UPDATE = "ng.duc.mercury.MainActivity.Home.BROADCAST";
 		public static final String INTENT_PERSONAL_QUERY =
 				"ng.duc.mercury.MainActivity.Personal.QUERY";
+		public static final String INTENT_AROUND_QUERY =
+				"ng.duc.mercury.MainActivity.Around.QUERY";
 
 		// This is a key in Intent.putExtra.
+		public static final String EXTRA = "ng.duc.mercury.MainActivity.EXTRA";
 		public static final String UPDATE_HOME_ARRAYLIST = "ng.duc.mercury.MainActivity.EXTRA_DATA";
 		public static final String URL_HOME = "ng.duc.mercury.MainActivity.LOCATION";
-		public static final String URL_PERSONAL = "ng.duc.mercury.MainActivity.PERSONAL";
 
+		public static final String URL_UPDATE = "ng.duc.mercury.MainActivity.URL";
 	}
 
 	/**
@@ -59,6 +62,14 @@ public class AppConstants {
 		public static final String TIMEADDED = "timeAdded";
 		// ==================================================================
 
+		// around tag information
+		public static final String EVENT_INFO = "ev";
+		public static final String EVENT_ID = "evID";
+		public static final String TYPE = "type";
+		public static final String AROUND_DEAL = "deal";
+		public static final String AROUND_EVENT = "event";
+		public static final String HEADER = "header";
+
 		// status code
 		public static final String CODE = "code";
 		public static final int CODE_SUCCESS = 1;
@@ -84,10 +95,16 @@ public class AppConstants {
 		public static String SERVER_NAME = "https://www.mercury.com";
 
 		public static String TAG = "tag";
+		public static String AROUND = "around";
 
 
 		public static String USER_ID = "userId";
 		public static String EXTRA = "extra";
+		public static String TYPE = "type";
+		public static String LAT = "lat";
+		public static String LON = "lon";
+
+		public static String REFRESH = "refresh";
 
 	}
 
