@@ -44,7 +44,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@id/horizontal_recyclerview_home"
         android:background="@drawable/home_image_gradient_left"
-        android:contentDescription="@string/visual_enhancement"/>
+        android:contentDescription="@string/cd_visual_enhancement"/>
 
     <ImageView
         android:layout_width="@dimen/home_scrollview_blur"
@@ -52,7 +52,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/horizontal_recyclerview_home"
         android:background="@drawable/home_image_gradient_right"
-        android:contentDescription="@string/visual_enhancement"/>
+        android:contentDescription="@string/cd_visual_enhancement"/>
 
 
 </RelativeLayout>

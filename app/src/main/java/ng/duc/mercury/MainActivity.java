@@ -42,6 +42,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import ng.duc.mercury.bus.BusMainActivity;
 import ng.duc.mercury.data.MercuryDatabaseOpener;
 import ng.duc.mercury.main.AroundFragment;
 import ng.duc.mercury.main.PersonalFragment;
@@ -80,6 +81,10 @@ import ng.duc.mercury.main.RecommendFragment;
  *      fragment can be accessed through the drawer navigation, while
  *      home fragment is completely removed and replaced by
  *      recommendation fragment.
+ *
+ *
+ * TODO: refine search for both searching businesses/stuff and event/deal
+ * TODO: refine location services for recommendation and around
  */
 
 
@@ -148,7 +153,11 @@ public class MainActivity extends AppCompatActivity implements
 		SharedPreferences prefs = getSharedPreferences(
 				AppConstants.PREFERENCES.GLOBAL, MODE_PRIVATE);
 		prefs.edit()
+				.clear()
 				.putString(AppConstants.PREFERENCES.USER_ID, "A123")
+//				.putString(AppConstants.PREFERENCES.USER_NAME, "Duc Nguyen")
+//				.putString(AppConstants.PREFERENCES.USER_PIC,
+//						   "https://www.dropbox.com/s/yxxdtkhgsxwgos2/ava.jpg?dl=1")
 				.putInt(AppConstants.PREFERENCES.PERSONAL_SYNC, 1)
 				.apply();
 	}
@@ -446,6 +455,11 @@ public class MainActivity extends AppCompatActivity implements
 			mDrawer.openDrawer(GravityCompat.START);
 		} else if (view.getId() == R.id.menu_settings) {
 			Toast.makeText(this, "Settings is clicked", Toast.LENGTH_SHORT).show();
+			// TODO: <debug> quick way to access new activity
+			Intent intent = new Intent(this, BusMainActivity.class);
+			intent.putExtra(AppConstants.SERVER_RESPONSE.BUS_ID, "Hihi123");
+//			intent.putExtra(AppConstants.SERVER_RESPONSE.DRAWER, "01");
+			startActivity(intent);
 		}
 	}
 

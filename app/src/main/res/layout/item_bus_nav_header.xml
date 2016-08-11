@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="185dp"
+    android:layout_marginBottom="10dp"
+    android:background="@android:color/black">
+
+    <ImageView
+        android:id="@+id/image_bus_nav_ava"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop = "30dp"
+        android:contentDescription="@string/cd_user_pic"/>
+
+    <TextView
+        android:id="@+id/text_bus_nav_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:textAppearance="@style/WhiteText34"/>
+
+</RelativeLayout>

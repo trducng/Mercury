@@ -36,11 +36,21 @@ public class AppConstants {
 		public static final String URL_UPDATE = "ng.duc.mercury.MainActivity.URL";
 	}
 
+	public static class BUSINESS_ACTIVITY {
+
+		public static final String INTENT_FILTER_DRAWER = "ng.duc.mercury.BusActivity.DRAWER";
+
+		public static final String INTENT_URL_UPDATE = "ng.duc.mercury.BusActivity.URL";
+		public static final String INTENT_EXTRA = "ng.duc.mercury.BusActivity.EXTRA";
+
+	}
+
 	/**
 	 * This class holds the constants that serve as the keys in JSON key-value pair from server
 	 */
 	public static class SERVER_RESPONSE {
 
+		public static final String ITEM = "item";
 
 		// items general ====================================================
 		public static final String BUS_ID = "busID";
@@ -62,6 +72,14 @@ public class AppConstants {
 		public static final String TIMEADDED = "timeAdded";
 		// ==================================================================
 
+		// business pages ===================================================
+		public static final String DRAWER = "drawer";
+
+		// drawer business navigation
+		public static final String DRAWER_BUSINESS_INFO = "0";
+		public static final String DRAWER_PRODUCT_INFO = "1";
+		public static final String DRAWER_LOYALTY = "2";
+
 		// around tag information
 		public static final String EVENT_INFO = "ev";
 		public static final String EVENT_ID = "evID";
@@ -75,6 +93,7 @@ public class AppConstants {
 		public static final int CODE_SUCCESS = 1;
 		public static final int CODE_ERROR = -1;
 		public static final int CODE_NULL = 0;
+
 
 		// general extra
 		public static final String EXTRA = "extra";
@@ -96,6 +115,8 @@ public class AppConstants {
 
 		public static String TAG = "tag";
 		public static String AROUND = "around";
+		public static String BUS = "bus";
+		public static String BUS_DRAWER = "drawer";
 
 
 		public static String USER_ID = "userId";
@@ -105,6 +126,10 @@ public class AppConstants {
 		public static String LON = "lon";
 
 		public static String REFRESH = "refresh";
+
+		public static String BUS_ID = "busId";
+
+
 
 	}
 
@@ -116,6 +141,8 @@ public class AppConstants {
 		public static final String GLOBAL = "ng.duc.mercury";
 
 		public static final String USER_ID = "uID";
+		public static final String USER_NAME = "uName";
+		public static final String USER_PIC = "uPic";
 
 		public static final String PERSONAL_SYNC = "personalSync";
 		public static final String PERSONAL_BUTTON_GROUP = "personalButtons";

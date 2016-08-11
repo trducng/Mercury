@@ -578,5 +578,18 @@ public class Utility {
 			return result;
 		}
 
+		/**
+		 * To fetch business drawer ids to construct appropriate drawer view
+		 * @param busId     the id of interested business
+		 * @return          the uri needed to query drawer information
+		 */
+		public static Uri busDrawerSync(String busId) {
+
+			return Uri.parse(URL_CONSTANTS.SERVER_NAME)
+					.buildUpon()
+					.appendPath(URL_CONSTANTS.BUS_DRAWER)
+					.appendQueryParameter(URL_CONSTANTS.BUS_ID, busId)
+					.build();
+		}
 	}
 }
