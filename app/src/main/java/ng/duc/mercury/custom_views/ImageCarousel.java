@@ -39,7 +39,7 @@ import java.util.ArrayList;
  *      - each image uri (optional): String. Each image uri is a string, so the whole collection
  *       of uris for all image is ArrayList<String>
  *      - layout of each image: int. The layout that contains all views within a single image.
- *      - each image layout ids: ArrayList<String>. Since each piece of information in the image
+ *      - each image layout ids: ArrayList<int>. Since each piece of information in the image
  *      must be assigned to a view, ImageCarousel needs the ids to accurately assign piece of
  *      information in image data to the view. For simplicity, each piece of information
  *      in data corresponds to the respective ids. E.g.: each image data: ["abc", "def", "ghi"],

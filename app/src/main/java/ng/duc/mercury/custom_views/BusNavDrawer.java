@@ -139,9 +139,9 @@ public class BusNavDrawer extends RecyclerView {
 			mBusNav = new ArrayList<>();
 			String[] busNavs = busNav.split("(?!^)");
 
-			for (String string : busNavs) {
-				Log.v(LOG_TAG, "Split 012: " + string);
-			}
+//			for (String string : busNavs) {
+//				Log.v(LOG_TAG, "Split 012: " + string);
+//			}
 
 			for (String string : busNavs) {
 

@@ -36,6 +36,7 @@ public class DataContract {
 	public static final String RECOMMENDATION_BUS = "recom";
 	public static final String AROUND = "around";
 	public static final String SEARCH = "search";
+	public static final String BUS_INFO = "busInfo";
 
 
 	public static final class tagEntry implements BaseColumns {
@@ -231,6 +232,118 @@ public class DataContract {
 		}
 	}
 
+
+	public static final class busInfoEntry implements BaseColumns {
+
+		public static final Uri CONTENT_URI =
+				BASE_URI.buildUpon().appendPath(BUS_INFO).build();
+
+		public static final String CONTENT_TYPE =
+				ContentResolver.CURSOR_DIR_BASE_TYPE + "/"
+						+ PACKAGE_NAME + "/" + BUS_INFO;
+		public static final String CONTENT_ITEM_TYPE =
+				ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"
+						+ PACKAGE_NAME + "/" + BUS_INFO;
+
+		// Constants for each column (
+		public static final String COL_BUSID = SERVER_RESPONSE.BUS_ID;
+		public static final String COL_NAME = SERVER_RESPONSE.BUS_NAME;
+		public static final String COL_CAT = SERVER_RESPONSE.BUS_CAT;
+		public static final String COL_CIMG = SERVER_RESPONSE.BUS_COVER_IMG;
+		public static final String COL_IMGS = SERVER_RESPONSE.BUS_NUM_IMGS;
+		public static final String COL_LOC = SERVER_RESPONSE.BUS_LOC;
+		public static final String COL_CONTACT = SERVER_RESPONSE.BUS_CONTACT;
+		public static final String COL_HOURS = SERVER_RESPONSE.BUS_HOURS;
+		public static final String COL_SAVED = "saved";
+
+		public static final String[] PROJECTION = new String[] {
+				_ID, COL_BUSID, COL_NAME, COL_CAT, COL_CIMG, COL_IMGS,
+				COL_LOC, COL_CONTACT, COL_HOURS, COL_SAVED
+		};
+
+		public static final int ID_IDX = 0;
+		public static final int BUSID_IDX = 1;
+		public static final int NAME_IDX = 2;
+		public static final int CAT_IDX = 3;
+		public static final int CIMG_IDX = 4;
+		public static final int IMGS_IDX = 5;
+		public static final int LOC_IDX = 6;
+		public static final int CONTACT_IDX = 7;
+		public static final int HOURS_IDX = 8;
+
+
+		public static final String selectBusId = COL_BUSID + " = ?";
+		public static final String selectSaved = COL_SAVED + " = ?";
+
+		/**
+		 * Create Uri that will be used by content provider to retrieve a complete
+		 * list of business entries (regardless of whether businesses are deals or events)
+		 * Ex content://ng.duc.mercury/busInfo
+		 * @return  uri that can be used to access complete list of bus info entries
+		 */
+		public static Uri buildGeneralUri() {
+			return CONTENT_URI;
+		}
+
+		/**
+		 * Create Uri that will be used by content provider to retrieve a specific busId
+		 * Ex content://ng.duc.mercury/busInfo/<busId>
+		 * @param busId     the id of business that we want to retrieve
+		 * @return          uri that can retrieve specific bus entry
+		 */
+		public static Uri buildBusUri(String busId) {
+
+			return CONTENT_URI.buildUpon()
+					.appendPath(busId)
+					.build();
+		}
+
+		/**
+		 * Create Uri that will be used by content provider to retrieve list of businesses
+		 * that are either saved/unsaved
+		 * Ex content://ng.duc.mercury/busInfo/saved/<int>
+		 * @param saved     whether saved (1) or not saved (0)
+		 * @return          uri that can be used to access entries that are saved / unsaved
+		 */
+		public static  Uri buildSavedUri(int saved) {
+
+			if ((saved != 0) && (saved != 1)) {
+				throw new IllegalArgumentException("Unrecognized saved. Can only be either " +
+						"0 or 1, but " + saved);
+			}
+
+			return CONTENT_URI.buildUpon()
+					.appendPath(COL_SAVED)
+					.appendPath(String.valueOf(saved))
+					.build();
+
+		}
+
+		/**
+		 * Return business id from uri. Return <busId> from:
+		 * content://ng.duc.mercury/busInfo/<busId>
+		 * @param uri   uri that contain business id
+		 * @return      business id
+		 */
+		public static String getBusId(Uri uri) {
+
+			String[] segments = uri.getPath().split("/");
+			return segments[segments.length-1];
+		}
+
+		/**
+		 * Return saved state from uri. Return <int> from:
+		 * content://ng.duc.mercury/busInfo/saved/<int>
+		 * @param uri   the uri that contain saved states
+		 * @return      saved state
+		 */
+		public static int getSaved(Uri uri) {
+
+			String[] segments = uri.getPath().split("/");
+			return Integer.parseInt(segments[segments.length-1]);
+		}
+	}
+
 	/**
 	 * Around table will handle two types of entries: normal entries and header entries.
 	 * Header entries are basically a condensed version of normal entries
@@ -422,7 +535,5 @@ public class DataContract {
 		}
 
 	}
-
-
 
 }

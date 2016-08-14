@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import ng.duc.mercury.data.DataContract.tagEntry;
 import ng.duc.mercury.data.DataContract.aroundEntry;
+import ng.duc.mercury.data.DataContract.busInfoEntry;
 
 /**
  * Created by ducnguyen on 6/19/16.
@@ -31,6 +32,7 @@ public class MercuryDatabaseOpener extends SQLiteOpenHelper {
 		// TODO: <debug> delete this
 		db.execSQL("DROP TABLE IF EXISTS " + DataContract.TAG_BUS);
 		db.execSQL("DROP TABLE IF EXISTS " + DataContract.AROUND);
+		db.execSQL("DROP TABLE IF EXISTS " + DataContract.BUS_INFO);
 
 		// ===============
 
@@ -41,7 +43,7 @@ public class MercuryDatabaseOpener extends SQLiteOpenHelper {
 				+ DataContract.TAG_BUS + " ("
 				+ tagEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 				+ tagEntry.COL_TAG + " TEXT NOT NULL, "
-				+ tagEntry.COL_BUSID + " TEXT NOT NULL, "
+				+ tagEntry.COL_BUSID + " TEXT UNIQUE NOT NULL, "
 				+ tagEntry.COL_NAME + " TEXT NOT NULL, "
 				+ tagEntry.COL_CAT + " TEXT NOT NULL, "
 				+ tagEntry.COL_COST + " INT NOT NULL, "
@@ -67,8 +69,22 @@ public class MercuryDatabaseOpener extends SQLiteOpenHelper {
 				+ aroundEntry.COL_PAGE + " INT, "
 				+ aroundEntry.COL_DISTANCE + " REAL); ";
 
+		final String SQL_CREATE_BUS_INFO_TABLE = "CREATE TABLE "
+				+ DataContract.BUS_INFO + " ("
+				+ busInfoEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+				+ busInfoEntry.COL_BUSID + " TEXT NOT NULL, "
+				+ busInfoEntry.COL_NAME + " TEXT NOT NULL, "
+				+ busInfoEntry.COL_CAT + " TEXT NOT NULL, "
+				+ busInfoEntry.COL_CIMG + " TEXT NOT NULL, "
+				+ busInfoEntry.COL_IMGS + " INT NOT NULL, "
+				+ busInfoEntry.COL_LOC + " TEXT NOT NULL, "
+				+ busInfoEntry.COL_CONTACT + " TEXT NOT NULL, "
+				+ busInfoEntry.COL_HOURS + " TEXT NOT NULL, "
+				+ busInfoEntry.COL_SAVED + " INT NOT NULL); ";
+
 		db.execSQL(SQL_CREATE_TAG_TABLE);
 		db.execSQL(SQL_CREATE_AROUND_TABLE);
+		db.execSQL(SQL_CREATE_BUS_INFO_TABLE);
 	}
 
 	@Override

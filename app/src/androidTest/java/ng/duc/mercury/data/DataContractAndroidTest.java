@@ -95,4 +95,26 @@ public class DataContractAndroidTest {
 
 	}
 
+	@Test
+	public void testBusInfoEntryMethods() {
+
+		assertThat(DataContract.busInfoEntry.buildGeneralUri().toString(),
+					is("content://ng.duc.mercury/busInfo"));
+
+		assertThat(DataContract.busInfoEntry.buildBusUri("abc").toString(),
+					is("content://ng.duc.mercury/busInfo/abc"));
+
+		assertThat(DataContract.busInfoEntry.buildSavedUri(1).toString(),
+					is("content://ng.duc.mercury/busInfo/saved/1"));
+
+		assertThat(DataContract.busInfoEntry.getBusId(
+				DataContract.busInfoEntry.buildBusUri("abc")),
+					is("abc"));
+
+		assertThat(DataContract.busInfoEntry.getSaved(
+				DataContract.busInfoEntry.buildSavedUri(1)),
+					is(1));
+
+	}
+
 }

@@ -43,6 +43,8 @@ public class AppConstants {
 		public static final String INTENT_URL_UPDATE = "ng.duc.mercury.BusActivity.URL";
 		public static final String INTENT_EXTRA = "ng.duc.mercury.BusActivity.EXTRA";
 
+		public static final String BUNDLE_BUS_ID = "busId";
+
 	}
 
 	/**
@@ -50,7 +52,7 @@ public class AppConstants {
 	 */
 	public static class SERVER_RESPONSE {
 
-		public static final String ITEM = "item";
+		public static final String RESULT = "result";
 
 		// items general ====================================================
 		public static final String BUS_ID = "busID";
@@ -70,15 +72,50 @@ public class AppConstants {
 		public static final String TAG = "tag";
 		public static final String TAG_COLOR = "tagColor";
 		public static final String TIMEADDED = "timeAdded";
+
+
 		// ==================================================================
 
 		// business pages ===================================================
-		public static final String DRAWER = "drawer";
 
 		// drawer business navigation
-		public static final String DRAWER_BUSINESS_INFO = "0";
-		public static final String DRAWER_PRODUCT_INFO = "1";
-		public static final String DRAWER_LOYALTY = "2";
+		public static final String DRAWER = "drawer";   // key
+		public static final String DRAWER_BUSINESS_INFO = "0"; // one value
+		public static final String DRAWER_PRODUCT_INFO = "1";   // one value
+		public static final String DRAWER_LOYALTY = "2";        // one value
+
+		// pages in general business info
+		public static final String BUS_INFO_NUM_EVENTS = "busInfoNumEvents";
+
+		// business general information
+		public static final String BUS_NUM_IMGS = "numImg";
+		public static final String BUS_CONTACT = "contact";
+		public static final String BUS_HOURS = "hours";
+
+		// business general recommendations and tips
+		public static final String REC_USER = "user";
+		public static final String REC_IMG = "img";
+		public static final String REC_CONTENT = "content";
+
+		// business other information
+		public static final String BUS_INFO_SPECIAL = "special";
+		public static final String BUS_INFO_FAV = "fav";
+		public static final String BUS_INFO_TIPS = "tips";
+
+		// ==================================================================
+
+		// products =========================================================
+
+		public static final String ITEM_IMAGE = "image";
+		public static final String ITEM_NAME = "name";
+		public static final String ITEM_PRICE = "price";
+
+		public static final String ITEM_ID = "id";
+		public static final String ITEM_CLICKABLE = "click";
+		public static final int ITEM_CLICKABLE_POSITIVE = 1;
+		public static final int ITEM_CLICKABLE_NEGATIVE = 0;
+
+		// ==================================================================
 
 		// around tag information
 		public static final String EVENT_INFO = "ev";
@@ -117,6 +154,8 @@ public class AppConstants {
 		public static String AROUND = "around";
 		public static String BUS = "bus";
 		public static String BUS_DRAWER = "drawer";
+		public static String BUS_NUM_EVENTS = "numEvent";
+		public static String BUS_INFO = "busInfo";
 
 
 		public static String USER_ID = "userId";
@@ -128,8 +167,6 @@ public class AppConstants {
 		public static String REFRESH = "refresh";
 
 		public static String BUS_ID = "busId";
-
-
 
 	}
 

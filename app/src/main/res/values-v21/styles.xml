@@ -30,6 +30,11 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="WhiteText20" parent="CustomFont">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="WhiteText24" parent="CustomFont">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">24sp</item>

@@ -30,7 +30,19 @@
             android:exported="false" />
 
         <service
-            android:name=".bus.BusMainActivity$DrawerSyncService"
+            android:name=".bus.BusInfoActivity$DrawerSyncService"
+            android:exported="false" />
+
+        <service
+            android:name=".bus.BusInfoActivity$EventSyncService"
+            android:exported="false" />
+
+        <service
+            android:name=".bus.BusInfoFragment$MainInfoIntentService"
+            android:exported="false" />
+
+        <service
+            android:name=".bus.BusInfoFragment$OtherInfoIntentService"
             android:exported="false" />
 
         <provider
@@ -62,7 +74,7 @@
                 android:resource="@xml/searchable"/>
         </activity>
 
-        <activity android:name=".bus.BusMainActivity" />
+        <activity android:name=".bus.BusInfoActivity" />
 
     </application>
 

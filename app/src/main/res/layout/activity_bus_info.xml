@@ -9,9 +9,24 @@
     tools:openDrawyer="start">
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager_main_activity"
+        android:id="@+id/viewpager_bus_info_activity"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
+
+    <!-- Wrap indicator inside frame layout because drawer layout does not support gravity bottom-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ng.duc.mercury.custom_views.IndicatorViewPager
+            android:id="@+id/indicator_viewpager_bus_info"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_gravity="bottom"/>
+
+    </FrameLayout>
 
     <ng.duc.mercury.custom_views.BusNavDrawer
         android:id="@+id/bus_nav_drawer"

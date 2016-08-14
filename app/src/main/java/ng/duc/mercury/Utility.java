@@ -365,7 +365,7 @@ public class Utility {
 		try {
 
 			JSONObject originalFile = new JSONObject(rawString);
-			JSONArray jsonFile = originalFile.getJSONArray("item");
+			JSONArray jsonFile = originalFile.getJSONArray(AppConstants.SERVER_RESPONSE.RESULT);
 
 			ArrayList<ContentValues> cvFiles = new ArrayList<>(jsonFile.length());
 
@@ -424,7 +424,7 @@ public class Utility {
 
 		try {
 
-			JSONArray jsonFile = jsonObject.getJSONArray("item");
+			JSONArray jsonFile = jsonObject.getJSONArray(AppConstants.SERVER_RESPONSE.RESULT);
 
 			ArrayList<ContentValues> cvFiles = new ArrayList<>(jsonFile.length());
 
@@ -591,5 +591,51 @@ public class Utility {
 					.appendQueryParameter(URL_CONSTANTS.BUS_ID, busId)
 					.build();
 		}
+
+		/**
+		 * To fetch the number of events to construct appropriate info activity. Example link:
+		 * https://mercury.com/numEvent?busID=<busID>
+		 * @param busId     the id of interested business
+		 * @return          the uri needed to query number of events
+		 */
+		public static Uri busNumEventSync(String busId) {
+			return Uri.parse(URL_CONSTANTS.SERVER_NAME)
+					.buildUpon()
+					.appendPath(URL_CONSTANTS.BUS_NUM_EVENTS)
+					.appendQueryParameter(URL_CONSTANTS.BUS_ID, busId)
+					.build();
+		}
+
+		/**
+		 * To fetch the general business information. Example link:
+		 * https://mercury.com/busInfo?busID=<busID>
+		 * @param busId     the id of business that we want to query general information
+		 * @return          the link to query from server
+		 */
+		public static Uri busInfoSync(String busId) {
+			return Uri.parse(URL_CONSTANTS.SERVER_NAME)
+					.buildUpon()
+					.appendPath(URL_CONSTANTS.BUS_INFO)
+					.appendQueryParameter(URL_CONSTANTS.BUS_ID, busId)
+					.build();
+		}
+
+		/**
+		 * To fetch other business information to show in business general page (ex: favourites,
+		 * customer tips, today specials...). This url is just slightly different from
+		 * build info  sync url (in that this one has extra=1 parameter)
+		 * https://mercury.com/busInfo?busID=<busID>&extra=1
+		 * @param busId     the id of business we want to query other information
+		 * @return
+		 */
+		public static Uri busInfoOtherSync(String busId) {
+			return Uri.parse(URL_CONSTANTS.SERVER_NAME)
+					.buildUpon()
+					.appendPath(URL_CONSTANTS.BUS_INFO)
+					.appendQueryParameter(URL_CONSTANTS.BUS_ID, busId)
+					.appendQueryParameter(URL_CONSTANTS.EXTRA, String.valueOf(1))
+					.build();
+		}
+
 	}
 }

@@ -39,6 +39,10 @@ public class MercuryDataProvider extends ContentProvider {
 	static final int LIST_TYPE_AROUND = 221;
 	static final int SINGLE_AROUND = 222;
 
+	static final int LIST_BUS_INFO = 110;
+	static final int LIST_BUS_INFO_SAVED = 111;
+	static final int SINGLE_BUS_INFO = 112;
+
 	// Helper to open and manage database
 	private MercuryDatabaseOpener mDatabaseOpener;
 
@@ -112,6 +116,36 @@ public class MercuryDataProvider extends ContentProvider {
 			case SINGLE_AROUND:
 				throw new UnsupportedOperationException("Cannot query single tag");
 
+			// Bus info entries
+			case LIST_BUS_INFO:
+				reCursor = db.query(DataContract.BUS_INFO,
+						DataContract.busInfoEntry.PROJECTION,
+						selection, selectionArgs, null, null, sortOrder);
+				break;
+			case LIST_BUS_INFO_SAVED:
+				int saved = DataContract.busInfoEntry.getSaved(uri);
+				String[] newSelectionArgs;
+				if ((selection == null) || (selectionArgs == null)){
+					selection = DataContract.busInfoEntry.selectSaved;
+					newSelectionArgs = new String[]{String.valueOf(saved)};
+				} else {
+					selection = DataContract.busInfoEntry.selectSaved + " & " + selection;
+					newSelectionArgs = new String[selectionArgs.length+1];
+					newSelectionArgs[0] = String.valueOf(saved);
+					System.arraycopy(selectionArgs, 0, newSelectionArgs, 1, selectionArgs.length);
+				}
+				reCursor = db.query(DataContract.BUS_INFO,
+						DataContract.busInfoEntry.PROJECTION,
+						selection, newSelectionArgs, null, null, sortOrder);
+				break;
+			case SINGLE_BUS_INFO:
+				reCursor = db.query(DataContract.BUS_INFO,
+						DataContract.busInfoEntry.PROJECTION,
+						DataContract.busInfoEntry.selectBusId,
+						new String[] {DataContract.busInfoEntry.getBusId(uri)},
+						null, null, null);
+				break;
+
 			default:
 				throw new UnsupportedOperationException("Unknown uri: " + uri);
 		}
@@ -152,6 +186,16 @@ public class MercuryDataProvider extends ContentProvider {
 					returnUri = uri;
 				} else {
 					throw new SQLException("Failed to insert to around database: " + uri);
+				}
+				break;
+			}
+
+			case SINGLE_BUS_INFO: {
+				long _id = db.insert(DataContract.BUS_INFO, null, values);
+				if (_id > 0) {
+					returnUri = uri;
+				} else {
+					throw new SQLException("Failed to insert to bus info table: " + uri);
 				}
 				break;
 			}
@@ -224,15 +268,56 @@ public class MercuryDataProvider extends ContentProvider {
 			}
 
 			case LIST_TYPE_AROUND: {
-				db.beginTransaction();
+
 				if (DataContract.aroundEntry.getAroundType(uri) == -1) {
 					throw new UnsupportedOperationException("Bulk insert data: cannot " +
 								"recognize uri" + uri);
 				}
 
+				db.beginTransaction();
+
 				try {
 					for (ContentValues value : values) {
 						long _id = db.insert(DataContract.AROUND, null, value);
+						if (_id != -1) {
+							returnCount++;
+						}
+					}
+					db.setTransactionSuccessful();
+				} finally {
+					db.endTransaction();
+				}
+				break;
+			}
+
+			case LIST_BUS_INFO: {
+				db.beginTransaction();
+				try {
+					for (ContentValues value : values) {
+						long _id = db.insert(DataContract.BUS_INFO, null, value);
+						if (_id != -1) {
+							returnCount++;
+						}
+					}
+					db.setTransactionSuccessful();
+				} finally {
+					db.endTransaction();
+				}
+				break;
+			}
+
+			case LIST_BUS_INFO_SAVED: {
+				if (!((DataContract.busInfoEntry.getSaved(uri) == 0) ||
+					(DataContract.busInfoEntry.getSaved(uri) == 1))) {
+					throw new UnsupportedOperationException("Bulk insert data: cannot " +
+							"recognize uri" + uri);
+				}
+
+				db.beginTransaction();
+
+				try {
+					for (ContentValues value : values) {
+						long _id = db.insert(DataContract.BUS_INFO, null, value);
 						if (_id != -1) {
 							returnCount++;
 						}
@@ -330,7 +415,31 @@ public class MercuryDataProvider extends ContentProvider {
 				break;
 			}
 
-			// TODO: might need single around deletion case
+			case LIST_BUS_INFO:
+				if (selection == null) selection = "1";
+				rowsDeleted = db.delete(DataContract.BUS_INFO, selection, selectionArgs);
+				break;
+
+			case LIST_BUS_INFO_SAVED:
+				int saved = DataContract.busInfoEntry.getSaved(uri);
+				String[] newSelectionArgs;
+				if ((selection == null) || (selectionArgs == null)) {
+					selection = DataContract.busInfoEntry.selectSaved;
+					newSelectionArgs = new String[] {String.valueOf(saved)};
+				}  else {
+					selection = DataContract.busInfoEntry.selectSaved + " & " + selection;
+					newSelectionArgs = new String[selectionArgs.length + 1];
+					newSelectionArgs[0] = String.valueOf(saved);
+					System.arraycopy(selectionArgs, 0, newSelectionArgs, 1, selectionArgs.length);
+				}
+				rowsDeleted = db.delete(DataContract.BUS_INFO, selection, newSelectionArgs);
+				break;
+
+			case SINGLE_BUS_INFO:
+				rowsDeleted = db.delete(DataContract.BUS_INFO,
+										DataContract.busInfoEntry.selectBusId,
+										new String[] {DataContract.busInfoEntry.getBusId(uri)});
+				break;
 
 			default:
 				throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -368,6 +477,12 @@ public class MercuryDataProvider extends ContentProvider {
 				return DataContract.aroundEntry.CONTENT_TYPE;
 			case SINGLE_AROUND:
 				return DataContract.aroundEntry.CONTENT_ITEM_TYPE;
+			case LIST_BUS_INFO:
+				return DataContract.busInfoEntry.CONTENT_TYPE;
+			case LIST_BUS_INFO_SAVED:
+				return DataContract.busInfoEntry.CONTENT_TYPE;
+			case SINGLE_BUS_INFO:
+				return DataContract.busInfoEntry.CONTENT_ITEM_TYPE;
 			default:
 				throw new UnsupportedOperationException(
 						"Unknown uri: " + uri.toString());
@@ -396,17 +511,12 @@ public class MercuryDataProvider extends ContentProvider {
 		matcher.addURI(authority, DataContract.AROUND + "/type/#", LIST_TYPE_AROUND);
 		matcher.addURI(authority, DataContract.AROUND + "/*", SINGLE_AROUND);
 
+		// Bus info data
+		matcher.addURI(authority, DataContract.BUS_INFO, LIST_BUS_INFO);
+		matcher.addURI(authority, DataContract.BUS_INFO + "/" +
+								  DataContract.busInfoEntry.COL_SAVED + "/#", LIST_BUS_INFO_SAVED);
+		matcher.addURI(authority, DataContract.BUS_INFO + "/*", SINGLE_BUS_INFO);
 
-//		matcher.addURI(authority, DataContract.RECOMMENDATION, RECOMMENDATION);
-//		matcher.addURI(authority, DataContract.LOYALTY, ALL_LOYALTY);
-//		matcher.addURI(authority, DataContract.EVENTS, ALL_EVENTS);
-//		matcher.addURI(authority, DataContract.PRODUCTS + "/*", EACH_BUSINESS_PRODUCTS);
-//		matcher.addURI(authority, DataContract.TESTIMONIALS + "/*", EACH_BUSINESS_TESTIMONIALS);
-//
-//		matcher.addURI(authority, DataContract.DETAILED + "/*", EACH_BUSINESS);
-//		matcher.addURI(authority, DataContract.TAG + "/*/*", EACH_BUSINESS);
-//		matcher.addURI(authority, DataContract.EVENTS + "/*", EACH_BUSINESS);
-//		matcher.addURI(authority, DataContract.LOYALTY_DETAIL + "/*", EACH_LOYALTY);
 
 		return matcher;
 	}
