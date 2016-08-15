@@ -44,6 +44,7 @@ public class AppConstants {
 		public static final String INTENT_EXTRA = "ng.duc.mercury.BusActivity.EXTRA";
 
 		public static final String BUNDLE_BUS_ID = "busId";
+		public static final String BUNDLE_EVENT_ID = "eventId";
 
 	}
 
@@ -101,6 +102,20 @@ public class AppConstants {
 		public static final String BUS_INFO_SPECIAL = "special";
 		public static final String BUS_INFO_FAV = "fav";
 		public static final String BUS_INFO_TIPS = "tips";
+
+		// event information
+		public static final String EVENT_IMG = "img";
+		public static final String EVENT_NAME = "name";
+		public static final String EVENT_CAT = "cat";
+		public static final String EVENT_TIME = "time";
+		public static final String EVENT_GOING = "going";
+		public static final String EVENT_DESCRIPTION = "desc";
+		public static final String EVENT_SCHEDULE = "sche";
+		public static final String EVENT_TRANSPORTATION = "trans";
+		public static final String EVENT_OTHER_INFO = "other";
+
+		public static final int EVENT_GOING_GO = 1;
+		public static final int EVENT_GOING_MAYBE = 0;
 
 		// ==================================================================
 
@@ -167,6 +182,7 @@ public class AppConstants {
 		public static String REFRESH = "refresh";
 
 		public static String BUS_ID = "busId";
+		public static String EVENT_ID = "eventId";
 
 	}
 

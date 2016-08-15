@@ -626,7 +626,7 @@ public class Utility {
 		 * build info  sync url (in that this one has extra=1 parameter)
 		 * https://mercury.com/busInfo?busID=<busID>&extra=1
 		 * @param busId     the id of business we want to query other information
-		 * @return
+		 * @return          link to access server
 		 */
 		public static Uri busInfoOtherSync(String busId) {
 			return Uri.parse(URL_CONSTANTS.SERVER_NAME)
@@ -635,6 +635,35 @@ public class Utility {
 					.appendQueryParameter(URL_CONSTANTS.BUS_ID, busId)
 					.appendQueryParameter(URL_CONSTANTS.EXTRA, String.valueOf(1))
 					.build();
+		}
+
+		/**
+		 * To fetch event information. The URL has the following format:
+		 * https://mercury.com/busInfo?busID=<busID>&evId=<eventId>&userId=<userId>
+		 * @param busId     the id of business that hosts that event
+		 * @param eventId   the id of event in that business
+		 * @param userId    to know user specific information regarding the event (going or not..)
+		 * @return          link to access server
+		 */
+		public static Uri busInfoEventId(String busId, String eventId, @Nullable String userId) {
+
+			if (userId == null) {
+				return Uri.parse(URL_CONSTANTS.SERVER_NAME)
+						.buildUpon()
+						.appendPath(URL_CONSTANTS.BUS_INFO)
+						.appendQueryParameter(URL_CONSTANTS.BUS_ID, busId)
+						.appendQueryParameter(URL_CONSTANTS.EVENT_ID, eventId)
+						.build();
+
+			} else {
+				return Uri.parse(URL_CONSTANTS.SERVER_NAME)
+						.buildUpon()
+						.appendPath(URL_CONSTANTS.BUS_INFO)
+						.appendQueryParameter(URL_CONSTANTS.BUS_ID, busId)
+						.appendQueryParameter(URL_CONSTANTS.EVENT_ID, eventId)
+						.appendQueryParameter(URL_CONSTANTS.USER_ID, userId)
+						.build();
+			}
 		}
 
 	}

@@ -16,8 +16,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import ng.duc.mercury.AppConstants.BUSINESS_ACTIVITY;
 import ng.duc.mercury.AppConstants.SERVER_RESPONSE;
@@ -59,29 +62,22 @@ public class BusInfoActivity extends AppCompatActivity {
 		Intent intent = getIntent();
 		mBusId = intent.getStringExtra(SERVER_RESPONSE.BUS_ID);
 		String busNav = intent.getStringExtra(SERVER_RESPONSE.DRAWER);
-		int mEvents = intent.getIntExtra(SERVER_RESPONSE.BUS_INFO_NUM_EVENTS, -1);
 
 		mIndicator = (IndicatorViewPager) findViewById(R.id.indicator_viewpager_bus_info);
 
 		mViewPager = (ViewPager) findViewById(R.id.viewpager_bus_info_activity);
-		if (mEvents != -1) {
-			// if num of events information is included in intent
-			mAdapter = new BusInfoPagerAdapter(getSupportFragmentManager(), mEvents);
-			mViewPager.setAdapter(mAdapter);
-		} else {
-			// if num of events information is not included in intent, download it from server
-			IntentFilter eventFilter = new IntentFilter(INTENT_FILTER_EVENT);
-			eventReceiver = new EventBroadcastReceiver();
-			LocalBroadcastManager.getInstance(this).registerReceiver(eventReceiver, eventFilter);
 
-			Intent eventIntent = new Intent(this, EventSyncService.class);
-			eventIntent.putExtra(BUSINESS_ACTIVITY.INTENT_URL_UPDATE,
-								 Utility.BuildURL.busNumEventSync(mBusId));
-			startService(eventIntent);
+		// if num of events information is not included in intent, download it from server
+		IntentFilter eventFilter = new IntentFilter(INTENT_FILTER_EVENT);
+		eventReceiver = new EventBroadcastReceiver();
+		LocalBroadcastManager.getInstance(this).registerReceiver(eventReceiver, eventFilter);
 
-		}
+		Intent eventIntent = new Intent(this, EventSyncService.class);
+		eventIntent.putExtra(BUSINESS_ACTIVITY.INTENT_URL_UPDATE,
+							 Utility.BuildURL.busNumEventSync(mBusId));
+		startService(eventIntent);
 
-
+		// Construct drawer
 		mDrawer = (BusNavDrawer) findViewById(R.id.bus_nav_drawer);
 
 		if (busNav != null) {
@@ -109,10 +105,12 @@ public class BusInfoActivity extends AppCompatActivity {
 	public class BusInfoPagerAdapter extends FragmentStatePagerAdapter {
 
 		int NUM_ITEMS;
+		ArrayList<String> events;
 
-		public BusInfoPagerAdapter(FragmentManager fm, int numEvents) {
+		public BusInfoPagerAdapter(FragmentManager fm, ArrayList<String> ev) {
 			super(fm);
-			NUM_ITEMS = numEvents + 1;
+			events = ev;
+			NUM_ITEMS = events.size() + 1;
 		}
 
 		@Override
@@ -130,6 +128,11 @@ public class BusInfoActivity extends AppCompatActivity {
 
 				Bundle arg = new Bundle();
 				arg.putString(BUSINESS_ACTIVITY.BUNDLE_BUS_ID, mBusId);
+
+				if (position - 1 < events.size()) {
+					arg.putString(BUSINESS_ACTIVITY.BUNDLE_EVENT_ID, events.get(position - 1));
+				}
+
 				Fragment fragment = new BusInfoEventFragment();
 				fragment.setArguments(arg);
 				return fragment;
@@ -206,12 +209,15 @@ public class BusInfoActivity extends AppCompatActivity {
 			url = Uri.parse("https://www.dropbox.com/s/b8niqc7ola5imtl/busNumEvent.json?dl=1");
 
 			JSONObject fromServer;
-			int numEvents = 0;
+			ArrayList<String> events = new ArrayList<>();
 			try {
 				fromServer = new JSONObject(Utility.sendHTTPRequest(url));
 				if (!(fromServer.has(SERVER_RESPONSE.CODE) &&
 						(fromServer.getInt(SERVER_RESPONSE.CODE) == SERVER_RESPONSE.CODE_ERROR))) {
-					numEvents = fromServer.getInt(SERVER_RESPONSE.RESULT);
+					JSONArray ev = fromServer.getJSONArray(SERVER_RESPONSE.RESULT);
+					if (ev != null) {
+						for (int i=0; i<ev.length(); i++) events.add(ev.getString(i));
+					}
 				}
 
 			} catch (JSONException e) {
@@ -220,7 +226,7 @@ public class BusInfoActivity extends AppCompatActivity {
 			}
 
 			Intent eventBroadcastIntent = new Intent(INTENT_FILTER_EVENT);
-			eventBroadcastIntent.putExtra(BUSINESS_ACTIVITY.INTENT_EXTRA, numEvents);
+			eventBroadcastIntent.putStringArrayListExtra(BUSINESS_ACTIVITY.INTENT_EXTRA, events);
 			LocalBroadcastManager.getInstance(this).sendBroadcast(eventBroadcastIntent);
 		}
 	}
@@ -230,10 +236,16 @@ public class BusInfoActivity extends AppCompatActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
-			int numEvent = intent.getIntExtra(BUSINESS_ACTIVITY.INTENT_EXTRA, 0);
-			mAdapter = new BusInfoPagerAdapter(getSupportFragmentManager(), numEvent);
+			ArrayList<String> events = intent.getStringArrayListExtra(BUSINESS_ACTIVITY.INTENT_EXTRA);
+			if (events == null) {
+				events = new ArrayList<>();
+				Log.e(LOG_TAG, "In event broadcast receiver, events list is null. Even if" +
+								" there aren't any events, events list should be an empty array");
+			}
+
+			mAdapter = new BusInfoPagerAdapter(getSupportFragmentManager(), events);
 			mViewPager.setAdapter(mAdapter);
-			mIndicator.setPages(numEvent + 1);
+			mIndicator.setPages(events.size() + 1);
 			mIndicator.run();
 			mViewPager.addOnPageChangeListener(mIndicator);
 		}

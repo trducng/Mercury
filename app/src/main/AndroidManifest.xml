@@ -45,6 +45,10 @@
             android:name=".bus.BusInfoFragment$OtherInfoIntentService"
             android:exported="false" />
 
+        <service
+            android:name=".bus.BusInfoEventFragment$BusEventSyncService"
+            android:exported="false" />
+
         <provider
             android:authorities="@string/package_name"
             android:name=".data.MercuryDataProvider"

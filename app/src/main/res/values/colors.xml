@@ -9,4 +9,5 @@
     <color name="black_text">#333333</color>
     <color name="black_semi_transparent_list_item">#80000000</color>
     <color name="yellow_button">#FFC000</color>
+    <color name="green">#26A65B</color>
 </resources>

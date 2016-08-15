@@ -31,7 +31,8 @@ import ng.duc.mercury.R;
  * |         o o o         |
  * |_______________________|
  *
- * To use this class, just supply the number of dots.
+ * To use this class, just supply the number of dots, call run() and then
+ * add this to the view pager page change listener.
  *
  */
 public class IndicatorViewPager extends LinearLayout

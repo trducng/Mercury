@@ -1,7 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</FrameLayout>
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scrollview_bus_info_event"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.percent.PercentRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="40dp">
+
+            <View
+                android:id="@+id/header_fake"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_widthPercent="100%"
+                app:layout_aspectRatio="150%"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"/>
+
+            <TextView
+                android:id="@+id/text_bus_info_event_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/header_fake"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:textAllCaps="true"
+                android:textSize="20sp"
+                android:textColor="@color/black_text"/>
+
+            <TextView
+                android:id="@+id/text_bus_info_event_going"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_bus_info_event_time"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:textAllCaps="true"
+                android:textSize="20sp"
+                android:textColor="@color/black_text"
+                android:text="@string/event_going"/>
+
+            <TextView
+                android:id="@+id/text_bus_info_event_description_header"
+                style="@style/BusInfoEvent"
+                android:layout_below="@id/text_bus_info_event_going"
+                android:layout_marginTop="20dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/text_bus_info_event_description_content"
+                style="@style/BusInfoEvent"
+                android:layout_below="@id/text_bus_info_event_description_header"
+                android:layout_marginTop="5dp"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/text_bus_info_event_schedule_header"
+                style="@style/BusInfoEvent"
+                android:layout_below="@id/text_bus_info_event_description_content"
+                android:layout_marginTop="20dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/text_bus_info_event_schedule_content"
+                style="@style/BusInfoEvent"
+                android:layout_below="@id/text_bus_info_event_schedule_header"
+                android:layout_marginTop="5dp"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/text_bus_info_event_transport_header"
+                style="@style/BusInfoEvent"
+                android:layout_below="@id/text_bus_info_event_schedule_content"
+                android:layout_marginTop="20dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/text_bus_info_event_transport_content"
+                style="@style/BusInfoEvent"
+                android:layout_below="@id/text_bus_info_event_transport_header"
+                android:layout_marginTop="5dp"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/text_bus_info_event_other_header"
+                style="@style/BusInfoEvent"
+                android:layout_below="@id/text_bus_info_event_transport_content"
+                android:layout_marginTop="20dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/tex_bus_info_event_other_content"
+                style="@style/BusInfoEvent"
+                android:layout_below="@id/text_bus_info_event_other_header"
+                android:layout_marginTop="5dp"
+                android:textSize="14sp"/>
+
+
+        </android.support.percent.PercentRelativeLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.percent.PercentFrameLayout
+        android:id="@+id/image_bus_info_event_header_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_widthPercent="100%"
+            app:layout_aspectRatio="150%">
+
+            <ImageView
+                android:id="@+id/image_bus_info_event_header"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/cd_bus_pic" />
+
+            <TextView
+                android:id="@+id/text_bus_info_event_cat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="30dp"
+                android:layout_marginEnd="30dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/WhiteText20"/>
+
+            <TextView
+                android:id="@+id/text_bus_info_event_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/text_bus_info_event_cat"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="15dp"
+                android:layout_marginEnd="30dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAlignment="viewEnd"
+                android:textAppearance="@style/WhiteText34"
+                android:fontFamily="serif"/>
+
+        </RelativeLayout>
+
+    </android.support.percent.PercentFrameLayout>
+
+    <!-- Have to put this appbarlayout to last so that it will be on top -->
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbarlayout_bus_info_event"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <LinearLayout
+            android:id="@+id/toolbar_bus_info_event"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:gravity="center"
+            android:background="@android:color/transparent">
+            <!-- TODO: create a layout behavior for this toolbar (linear layout)
+                 Actually, you can delete the linear layout, just maintain the
+                 child image and text views to app bar layout, since app bar
+                 layout is actually an extension of linear layout -->
+
+            <ImageView
+                android:id="@+id/menu_navigations"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:src="@drawable/menu"
+                android:clickable="true"
+                android:background="@android:color/transparent"/>
+            <!-- TODO: add back button and onClick to this image view -->
+
+            <TextView
+                android:id="@+id/menu_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:textAppearance="@style/WhiteText24"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:background="@android:color/transparent"
+                android:text="Sample business"/>
+            <!-- TODO: manually retrieve this text view and add business name here
+                 Also handle transparency of this text view -->
+
+        </LinearLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+</android.support.design.widget.CoordinatorLayout>

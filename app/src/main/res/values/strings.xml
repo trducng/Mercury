@@ -21,9 +21,17 @@
     <string name="around_event">Events</string>
     <string name="around_empty">Oops&#8230; Seems like there isn\'t anything around&#8230;</string>
 
+    <!-- Business activity -->
+    <string name="event_going">Going</string>
+    <string name="event_description">Description:</string>
+    <string name="event_schedule">Schedule:</string>
+    <string name="event_trans">Transportation:</string>
+    <string name="event_other">Other information:</string>
+
     <!-- Image accessibility content description -->
     <string name="cd_user_pic">User profile picture</string>
     <string name="cd_visual_enhancement">Visual enhancement</string>
+    <string name="cd_bus_pic">Business profile picture</string>
 
     <!-- Drawer -->
     <string name="drawer_user_account">Your account</string>
@@ -37,6 +45,5 @@
     <string name="drawer_bus_general">Basic information</string>
     <string name="drawer_bus_product">Product information</string>
     <string name="drawer_bus_loyalty">Loyalty program</string>
-
 
 </resources>
